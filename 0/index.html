@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Project 0</title>
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+  <header class="hero">
+    <div class="hero-inner wrap">
+      <a class="brand" href="#top">
+        <div class="container" aria-hidden="true"><img src="./UCB_logo.png" alt=""></div>
+        <div class="brand-title">K. Wehmeyer - CS180 - Project 0</div>
+      </a>
+      <nav aria-label="Sections">
+        <a href="#overview" id="lnk-overview">Overview</a>
+        <a href="#part1" id="lnk-part1">Part 1</a>
+        <a href="#part2" id="lnk-part2">Part 2</a>
+        <a href="#part3" id="lnk-part3">Part 3</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="wrap">
+    <div class="hero-blurb" id="top">
+      <h1>Becoming Friends with Your Camera</h1>
+    </div>
+
+
+
+      <main class="stack">
+        <!-- OVERVIEW -->
+        <section id="overview" class="card">
+          <div class="overline">Overview</div>
+          <h2>Project 0</h2>
+          <div class="stack">
+            <p>The goal of Project 0 is to understand perspective with different camera settings.</p>
+          </div>
+        </section>
+
+        <!-- PART 1 -->
+        <section id="part1" class="card">
+          <div class="overline">Part 1</div>
+          <h2>Selfies</h2>
+          <div class="stack">
+            <p>Take a picture of your friend (or yourself) from close up. You get a typical distorted selfie image. Now step back several feet from your subject, zoom in, and take a second picture. Try to get the face in the second photo to be the same size as in the first photo. If you've done things right, the second portrait should look much better than the first one. Think about why this is.</p>
+
+            <figure>
+                <div class="image-row">
+                    <figure><img src="media/05x.jpg" alt="Image 1"> <figcaption>0.5x zoom</figcaption></figure>
+                    <figure><img src="media/07x.jpg" alt="Image 1"> <figcaption>0.7x zoom</figcaption></figure>
+                    <figure><img src="media/1x.jpg" alt="Image 1"> <figcaption>1x zoom</figcaption></figure>
+                    <figure><img src="media/2x.jpg" alt="Image 1"> <figcaption>2x zoom</figcaption></figure>
+
+                </div>
+              <figcaption>Selfies with different zoom options and distances</figcaption>
+            </figure>
+
+            <div class="callout"><strong>Think about why:</strong> Due to the different distances and zoom options the angle of incoming photons differ. Therefore the 
+            faces with higher zooms appear more flat whereas the one with 0.5x zoom appears very "deep" (fish eye look).</div>
+          </div>
+        </section>
+
+        <!-- PART 2 -->
+        <section id="part2" class="card">
+          <div class="overline">Part 2</div>
+          <h2>Architectural Perspective</h2>
+          <div class="stack">
+            <p>Let's repeat the same procedure in reverse, for an urban scene. Pick a nice view down a long street (or a walking path on campus), zoom in, and take a photo. Now, walk down the street in the direction of your first shot, and take a second photo without zoom, such that the scene in the two photos appears approximately the same size. The first picture should look flattened, or compressed, compared to the second. Again, think about why.</p>
+
+           <figure>
+                <div class="image-row5">
+                    <figure><img src="media/1_4x.jpg" alt="Image 1"> <figcaption>0.5x zoom</figcaption></figure>
+                    <figure><img src="media/1_2x.jpg" alt="Image 1"> <figcaption>0.7x zoom</figcaption></figure>
+                    <figure><img src="media/1_1x.jpg" alt="Image 1"> <figcaption>1x zoom</figcaption></figure>
+                    <figure><img src="media/1_07x.jpg" alt="Image 1"> <figcaption>2x zoom</figcaption></figure>
+                    <figure><img src="media/1_05x.jpg" alt="Image 1"> <figcaption>4x zoom</figcaption></figure>
+
+                </div>
+              <figcaption>Floor in the social science building with different zoom options and distances.</figcaption>
+            </figure>
+
+            <div class="callout"><strong>Think about why:</strong> Similar to the selfies the zoom options change the focal length and therefore the incoming angle of photons. This makes the images with lower zoom appear deeper and the ones with higher zoom more flat.</div>
+          </div>
+        </section>
+
+        <!-- PART 3 -->
+        <section id="part3" class="card">
+          <div class="overline">Part 3</div>
+          <h2>The Dolly Zoom</h2>
+          <div class="stack">
+            <p>In this part, we will be duplicating a classic film effect called the dolly zoom. It is a camera movement also known as the "Vertigo shot", after a famous scene in Hitchcock's <em>Vertigo</em>.</p>
+            
+                <div class="image-row1">
+                    <figure><img src="media/gif.gif" alt="Image 1"> <figcaption>Dolly zoom on a water bottle</figcaption></figure>
+          </div>
+        </section>
+
+      </main>
+
+    <footer>
+      © <span id="year"></span> — Konstantin Wehmeyer
+    </footer>
+  </div>
+
+  <script>
+    // Active link highlighting based on scroll position
+    const sections = [
+      { id: 'overview', link: 'lnk-overview' },
+      { id: 'part1', link: 'lnk-part1' },
+      { id: 'part2', link: 'lnk-part2' },
+      { id: 'part3', link: 'lnk-part3' }
+    ];
+
+    const linkMap = new Map(sections.map(s => [s.id, document.getElementById(s.link)]));
+
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        const l = linkMap.get(entry.target.id);
+        if (!l) return;
+        if (entry.isIntersecting) {
+          // remove active
+          linkMap.forEach(a => a.classList.remove('active'));
+          l.classList.add('active');
+        }
+      })
+    }, { rootMargin: '-40% 0px -55% 0px', threshold: 0.02 });
+
+    sections.forEach(s => {
+      const el = document.getElementById(s.id);
+      if (el) io.observe(el);
+    });
+
+    // Year in footer
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
