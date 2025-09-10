@@ -1,0 +1,143 @@
+:root {
+  --bg: #ffffff;
+  --text: #222222;
+  --muted: #555555;
+  --border: #dddddd;
+  --accent: #2a6ebb;
+  --accent-light: #e8f0fa;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  color: var(--text);
+  background: var(--bg);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.6;
+}
+
+.wrap { max-width: 960px; margin: 0 auto; padding: 24px; }
+
+header.hero {
+  position: sticky; top: 0; z-index: 50; background: #fff;
+  border-bottom: 1px solid var(--border);
+}
+.hero-inner { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 14px 24px; }
+.brand { display: flex; align-items: center; gap: 8px; text-decoration: none; color: var(--text); font-weight: 600; }
+.logo {
+  width: 28px; height: 28px; border-radius: 6px; background: var(--accent);
+}
+.container img {
+  object-fit: contain;
+  width: 40%;
+  height: 40%;
+}
+
+.brand-title { font-weight: 600; }
+
+nav a { color: var(--muted); text-decoration: none; padding: 6px 10px; border-radius: 6px; }
+nav a:hover { color: var(--accent); background: var(--accent-light); }
+nav a.active { color: var(--accent); font-weight: 600; }
+
+.hero-blurb { padding: 32px 0 10px; text-align: center; }
+.hero-blurb h1 { font-size: clamp(24px, 4vw, 36px); margin: 0 0 8px; }
+.hero-blurb p { margin: 0 auto; max-width: 700px; color: var(--muted); font-size: 16px; }
+
+.grid { display: grid; grid-template-columns: 1fr; gap: 20px; }
+@media (min-width: 860px) {
+  .grid { grid-template-columns: 240px 1fr; }
+}
+
+.toc { position: sticky; top: 88px; align-self: start; background: #fafafa; border: 1px solid var(--border); border-radius: 8px; padding: 16px; }
+.toc h3 { margin: 0 0 8px; font-size: 13px; text-transform: uppercase; color: var(--muted); }
+.toc ul { list-style: none; padding: 0; margin: 0; display: grid; gap: 6px; }
+.toc a { display: block; color: var(--text); text-decoration: none; padding: 6px 8px; border-radius: 4px; }
+.toc a:hover { background: var(--accent-light); color: var(--accent); }
+
+section.card {
+  background: #fff; border: 1px solid var(--border);
+  border-radius: 8px; padding: 20px;
+}
+
+.overline { display: inline-block; font-size: 11px; text-transform: uppercase; color: var(--muted); padding: 4px 8px; background: #f2f2f2; border-radius: 12px; }
+
+h2 { margin: 8px 0 12px; font-size: clamp(20px, 3vw, 28px); }
+
+p { color: var(--text); }
+
+.stack { display: grid; gap: 12px; }
+
+.media-pair { display: grid; gap: 12px; grid-template-columns: 1fr; }
+@media (min-width: 720px) { .media-pair { grid-template-columns: 1fr 1fr; } }
+.image-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px; /* space between images */
+}
+.image-row1 {
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  gap: 12px; /* space between images */
+}
+
+.image-row2 {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px; /* space between images */
+}
+/* pick the size/shape you want for every image */
+.img-box{
+  aspect-ratio: 4 / 3;         /* or 1 / 1 for square, 16 / 9, etc. */
+  overflow:hidden;              /* hide the cropped overflow */
+}
+
+.img-box img{
+  width:100%;
+  height:100%;
+  object-fit:cover;             /* fill the box, crop as needed */
+  object-position:center;       /* center the crop */
+  display:block;                /* removes inline-img baseline gap */
+}
+
+.image-row5{
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 12px; /* space between images */
+}
+
+.image-row img {
+  width: 100%;
+  height: auto;
+  border-radius: 4px;
+  object-fit: cover;
+}
+.image-row1 img {
+  width: 100%;
+  height: auto;
+  border-radius: 4px;
+  object-fit: cover;
+}
+.image-row5 img {
+  width: 100%;
+  height: auto;
+  border-radius: 4px;
+  object-fit: cover;
+}
+
+.dropzone {
+  border: 2px dashed var(--border); border-radius: 6px; aspect-ratio: 4/3; display: grid; place-items: center; background: #fafafa;
+}
+.dropzone span { color: var(--muted); font-size: 14px; }
+
+figure { margin: 0; }
+figcaption { text-align: center; color: var(--muted); font-size: 13px; margin-top: 6px; }
+
+.callout { border: 1px solid var(--border); background: #f9f9f9; padding: 12px 14px; border-radius: 6px; }
+.callout strong { color: var(--text); }
+
+.checklist { display: grid; gap: 6px; margin: 4px 0 0; padding-left: 0; }
+.checklist li { list-style: none; padding-left: 24px; position: relative; }
+.checklist li::before { content: "✓"; position: absolute; left: 0; top: 0; color: var(--accent); }
+
+footer { text-align: center; color: var(--muted); font-size: 13px; padding: 24px 0 40px; }

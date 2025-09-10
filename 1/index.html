@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Project 1</title>
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+  <header class="hero">
+    <div class="hero-inner wrap">
+      <a class="brand" href="#top">
+        <div class="container" aria-hidden="true"><img src="./UCB_logo.png" alt=""></div>
+        <div class="brand-title">K. Wehmeyer - CS180 - Project 1</div>
+      </a>
+      <nav aria-label="Sections">
+        <a href="#overview" id="lnk-overview">Overview</a>
+        <a href="#part1" id="lnk-part1">Part 1</a>
+        <a href="#part2" id="lnk-part2">Part 2</a>
+        <a href="#part3" id="lnk-part2">Part 3</a>
+        <a href="#part4" id="lnk-part2">Part 4</a>
+        <a href="#part5" id="lnk-part2">Part 5</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="wrap">
+    <div class="hero-blurb" id="top">
+      <h1>Images of the Russian Empire</h1>
+    </div>
+
+
+
+      <main class="stack">
+        <!-- OVERVIEW -->
+        <section id="overview" class="card">
+          <div class="overline">Overview</div>
+          <h2>Project 1</h2>
+          <div class="stack">
+            <p>The goal of Project 1 is to take the digitized Prokudin-Gorskii glass plate images and, using image processing techniques, automatically produce a color image with as few visual artifacts as possible.</p>
+          </div>
+        </section>
+
+        <!-- PART 1 -->
+        <section id="part1" class="card">
+          <div class="overline">Part 1</div>
+          <h2>Approach</h2>
+          <div class="stack">
+            
+            <h3>Preprocessing</h3>
+            <p>
+              After loading and splitting up the image using the provided boilerplate code I went on to crop the images. As suggested 
+              in the task description, the borders do not provide a lot of insights into the alignment of the different channels and 
+              for the computation of similarity only the inner parts were used. I set a parameterized cutoff value of 10% of the pixels for each side.
+            </p>
+            <h3>Similarity metrics</h3>
+            <p>Next, I implemented a simple function calculating the Euclidean Distance of two images. The formula was provided in the task 
+              description, and the function is a simple one-liner. 
+            </p>
+
+            <h3>Alignment</h3>
+
+            <p>To calculate the right offset for two given channels, I implemented the naive solution of iterating over a predefined
+              range of offset values (in my case 15) for both axis using two nested for-loops. If the current Euclidean Distance is lower than the saved 
+              global minimum, the offset values are saved. Once the similarity is computed for the whole range, the offsets corresponding to the minimum distances are returned. 
+              
+            </p>
+
+
+            <h3>Pyramid </h3>
+            <p>
+              To reduce computation time on the large tif images, I implemented a recursive pyramid search as suggested in the task description.
+              As a first step I created the image pyramid using a function that downsamples the image at every k-th point, where k = 2**i.
+              
+              I then iteratively called the brute force alignment function, starting with the coarsest level of the pyramid (in my case
+              5, only using every 2**5 = 32nd pixel). The returned shift then needs to be scaled by a factor of 2 for the next level in the pyramid as 
+              the resolution increases. I then rolled the channel on the next level using that offset and called the alignment function again. 
+            </p>
+
+            <h3>Using edges </h3>
+            <p>
+              As the results on some of the images are quite bad (i.e. 'emir', or 'melons'), I tried to align the images using their edges and not
+              the raw values. My hope was that this would allow the algorithm to align the channels on the edges. I used a Sobel Edge detection to preprocess 
+              both the rolled and reference channel before calling the alignment function.  
+
+              The input image for the alignment function can be seen below, the final alignment results on edge input can be found in the next section (section 3).
+              
+               <figure>
+              <div class="image-row1">
+                <figure class="card">
+                  <div class="img-box">
+                    <img src="media/emir_edges.jpg" alt="Image 1">
+                  </div>
+                  <figcaption>Example input image (Emir) after Sobel edge detection</figcaption>
+                </figure>
+              </div>
+            </figure>
+              
+            </p>
+
+          </div>
+
+        </section>
+
+        <!-- PART 2 -->
+        <section id="part2" class="card">
+          <div class="overline">Part 2</div>
+          <h2>Examples</h2>
+          <div class="stack">
+
+            
+            For all images the aligned version is compared to the naive solution of just stacking the original channels onto each other.
+            <h3>Low resolution (jpg) images</h3>
+            
+            <figure>
+              <div class="image-row2">
+                <figure class="card">
+                  <div class="img-box">
+                    <img src="media_v1/cathedral_naive.jpg" alt="Image 1">
+                  </div>
+                  <figcaption>Naive solution</figcaption>
+                </figure>
+                <figure class="card">
+                  <div class="img-box">
+                    <img src="media_v1/cathedral_aligned.jpg" alt="Image 1">
+                  </div>
+                  <figcaption>Aligned solution</figcaption>
+                </figure>
+              </div>
+              <figcaption>Cathedral: G shift: (5,2) R shift: (12,3) </figcaption>
+            </figure>
+
+            <figure>
+              <div class="image-row2">
+                <figure class="card">
+                  <div class="img-box">
+                    <img src="media_v1/monastery_naive.jpg" alt="Image 1">
+                  </div>
+                  <figcaption>Naive solution</figcaption>
+                </figure>
+                <figure class="card">
+                  <div class="img-box">
+                    <img src="media_v1/monastery_aligned.jpg" alt="Image 1">
+                  </div>
+                  <figcaption>Aligned solution</figcaption>
+                </figure>
+              </div>
+              <figcaption>Monastery: G shift: (-3,2) R shift: (3,2)</figcaption>
+            </figure>
+
+            <figure>
+              <div class="image-row2">
+                <figure class="card">
+                  <div class="img-box">
+                    <img src="media_v1/tobolsk_naive.jpg" alt="Image 1">
+                  </div>
+                  <figcaption>Naive solution</figcaption>
+                </figure>
+                <figure class="card">
+                  <div class="img-box">
+                    <img src="media_v1/tobolsk_aligned.jpg" alt="Image 1">
+                  </div>
+                  <figcaption>Aligned solution</figcaption>
+                </figure>
+              </div>
+              <figcaption>Tobolsk: G shift: (3,3) R shift: (7,3)</figcaption>
+            </figure>
+
+            <h3>High resolution (tif) images</h3>
+            
+            
+              <figure>
+                <div class="image-row2">
+                  <figure class="card">
+                    <div class="img-box">
+                      <img src="media_v1/emir_naive.jpg" alt="Image 1">
+                    </div>
+                    <figcaption>Naive solution</figcaption>
+                  </figure>
+                  <figure class="card">
+                    <div class="img-box">
+                      <img src="media_v1/emir_aligned.jpg" alt="Image 1">
+                    </div>
+                    <figcaption>Aligned solution</figcaption>
+                  </figure>
+                </div>
+                <figcaption>Emir: G shift: (44,24) R shift: (52,-48) </figcaption>
+              </figure>
+
+              <figure>
+                <div class="image-row2">
+                  <figure class="card">
+                    <div class="img-box">
+                      <img src="media_v1/harvesters_naive.jpg" alt="Image 1">
+                    </div>
+                    <figcaption>Naive solution</figcaption>
+                  </figure>
+                  <figure class="card">
+                    <div class="img-box">
+                      <img src="media_v1/harvesters_aligned.jpg" alt="Image 1">
+                    </div>
+                    <figcaption>Aligned solution</figcaption>
+                  </figure>
+                </div>
+                <figcaption>Harvesters: G shift: (50,22) R shift: (60,10) </figcaption>
+              </figure>
+
+              <figure>
+                <div class="image-row2">
+                  <figure class="card">
+                    <div class="img-box">
+                      <img src="media_v1/icon_naive.jpg" alt="Image 1">
+                    </div>
+                    <figcaption>Naive solution</figcaption>
+                  </figure>
+                  <figure class="card">
+                    <div class="img-box">
+                      <img src="media_v1/icon_aligned.jpg" alt="Image 1">
+                    </div>
+                    <figcaption>Aligned solution</figcaption>
+                  </figure>
+                </div>
+                <figcaption>Icon: G shift: (38,22) R shift: (56,30)</figcaption>
+              </figure>
+
+              <figure>
+                <div class="image-row2">
+                  <figure class="card">
+                    <div class="img-box">
+                      <img src="media_v1/italil_naive.jpg" alt="Image 1">
+                    </div>
+                    <figcaption>Naive solution</figcaption>
+                  </figure>
+                  <figure class="card">
+                    <div class="img-box">
+                      <img src="media_v1/italil_aligned.jpg" alt="Image 1">
+                    </div>
+                    <figcaption>Aligned solution</figcaption>
+                  </figure>
+                </div>
+                <figcaption>Italil: G shift: (38,24) R shift: (52,34)</figcaption>
+              </figure>
+
+              <figure>
+                <div class="image-row2">
+                  <figure class="card">
+                    <div class="img-box">
+                      <img src="media_v1/lastochikino_naive.jpg" alt="Image 1">
+                    </div>
+                    <figcaption>Naive solution</figcaption>
+                  </figure>
+                  <figure class="card">
+                    <div class="img-box">
+                      <img src="media_v1/lastochikino_aligned.jpg" alt="Image 1">
+                    </div>
+                    <figcaption>Aligned solution</figcaption>
+                  </figure>
+                </div>
+                <figcaption>Lastochikino: G shift: (38,24) R shift: (52,34) </figcaption>
+              </figure>
+
+              <figure>
+                <div class="image-row2">
+                  <figure class="card">
+                    <div class="img-box">
+                      <img src="media_v1/melons_naive.jpg" alt="Image 1">
+                    </div>
+                    <figcaption>Naive solution</figcaption>
+                  </figure>
+                  <figure class="card">
+                    <div class="img-box">
+                      <img src="media_v1/melons_aligned.jpg" alt="Image 1">
+                    </div>
+                    <figcaption>Aligned solution</figcaption>
+                  </figure>
+                </div>
+                <figcaption>Melons: G shift: (54,6) R shift: (70,14) </figcaption>
+              </figure>
+
+              <figure>
+                <div class="image-row2">
+                  <figure class="card">
+                    <div class="img-box">
+                      <img src="media_v1/self_portrait_naive.jpg" alt="Image 1">
+                    </div>
+                    <figcaption>Naive solution</figcaption>
+                  </figure>
+                  <figure class="card">
+                    <div class="img-box">
+                      <img src="media_v1/self_portrait_aligned.jpg" alt="Image 1">
+                    </div>
+                    <figcaption>Aligned solution</figcaption>
+                  </figure>
+                </div>
+                <figcaption>Self Portrait: G shift: (54,22) R shift: (68,36) </figcaption>
+              </figure>
+
+              <figure>
+                <div class="image-row2">
+                  <figure class="card">
+                    <div class="img-box">
+                      <img src="media_v1/siren_naive.jpg" alt="Image 1">
+                    </div>
+                    <figcaption>Naive solution</figcaption>
+                  </figure>
+                  <figure class="card">
+                    <div class="img-box">
+                      <img src="media_v1/siren_aligned.jpg" alt="Image 1">
+                    </div>
+                    <figcaption>Aligned solution</figcaption>
+                  </figure>
+                </div>
+                <figcaption>Siren: G shift: (44,-10) R shift: (58,-30) </figcaption>
+              </figure>
+
+              <figure>
+                <div class="image-row2">
+                  <figure class="card">
+                    <div class="img-box">
+                      <img src="media_v1/three_generations_naive.jpg" alt="Image 1">
+                    </div>
+                    <figcaption>Naive solution</figcaption>
+                  </figure>
+                  <figure class="card">
+                    <div class="img-box">
+                      <img src="media_v1/three_generations_aligned.jpg" alt="Image 1">
+                    </div>
+                    <figcaption>Aligned solution</figcaption>
+                  </figure>
+                </div>
+                <figcaption>Three Generations: G shift: (44,18) R shift: (58,16) </figcaption>
+              </figure>
+
+
+
+
+
+
+            <h3>High resolution (tif) images using edges</h3>
+            <p>Using edge images as input for the alignment function sometimes improves the outcome, but only in some cases.
+
+            </p>
+            
+              <figure>
+                <div class="image-row2">
+                  <figure class="card">
+                    <div class="img-box">
+                      <img src="media_v1/emir_aligned.jpg" alt="Image 1">
+                    </div>
+                    <figcaption>Raw value aligned solution</figcaption>
+                  </figure>
+                  <figure class="card">
+                    <div class="img-box">
+                      <img src="media_v1/emir_aligned_edges.jpg" alt="Image 1">
+                    </div>
+                    <figcaption>Edge aligned solution</figcaption>
+                  </figure>
+                </div>
+                <figcaption>Emir: G shift: (50,26) R shift: (68,40) </figcaption>
+              </figure>
+
+              <figure>
+                <div class="image-row2">
+                  <figure class="card">
+                    <div class="img-box">
+                      <img src="media_v1/harvesters_aligned.jpg" alt="Image 1">
+                    </div>
+                    <figcaption>Raw value aligned solution</figcaption>
+                  </figure>
+                  <figure class="card">
+                    <div class="img-box">
+                      <img src="media_v1/harvesters_aligned_edges.jpg" alt="Image 1">
+                    </div>
+                    <figcaption>Edge aligned solution</figcaption>
+                  </figure>
+                </div>
+                <figcaption>Harvesters: G shift: (54,28) R shift: (70,14)</figcaption>
+              </figure>
+
+              <figure>
+                <div class="image-row2">
+                  <figure class="card">
+                    <div class="img-box">
+                      <img src="media_v1/icon_aligned.jpg" alt="Image 1">
+                    </div>
+                    <figcaption>Raw value aligned solution</figcaption>
+                  </figure>
+                  <figure class="card">
+                    <div class="img-box">
+                      <img src="media_v1/icon_aligned_edges.jpg" alt="Image 1">
+                    </div>
+                    <figcaption>Edge aligned solution</figcaption>
+                  </figure>
+                </div>
+                <figcaption>Icon: G shift: (42,24) R shift: (64,32)</figcaption>
+              </figure>
+
+              <figure>
+                <div class="image-row2">
+                  <figure class="card">
+                    <div class="img-box">
+                      <img src="media_v1/italil_aligned.jpg" alt="Image 1">
+                    </div>
+                    <figcaption>Raw value aligned solution</figcaption>
+                  </figure>
+                  <figure class="card">
+                    <div class="img-box">
+                      <img src="media_v1/italil_aligned_edges.jpg" alt="Image 1">
+                    </div>
+                    <figcaption>Edge aligned solution</figcaption>
+                  </figure>
+                </div>
+                <figcaption>Italil: G shift: (44,28)R shift: (64,40)</figcaption>
+              </figure>
+
+              <figure>
+                <div class="image-row2">
+                  <figure class="card">
+                    <div class="img-box">
+                      <img src="media_v1/lastochikino_aligned.jpg" alt="Image 1">
+                    </div>
+                    <figcaption>Raw value aligned solution</figcaption>
+                  </figure>
+                  <figure class="card">
+                    <div class="img-box">
+                      <img src="media_v1/lastochikino_aligned_edges.jpg" alt="Image 1">
+                    </div>
+                    <figcaption>Edge aligned solution</figcaption>
+                  </figure>
+                </div>
+                <figcaption>Lastochikino: G shift: (-6,-2)R shift: (62,-10) </figcaption>
+              </figure>
+
+              <figure>
+                <div class="image-row2">
+                  <figure class="card">
+                    <div class="img-box">
+                      <img src="media_v1/melons_aligned.jpg" alt="Image 1">
+                    </div>
+                    <figcaption>Raw value aligned solution</figcaption>
+                  </figure>
+                  <figure class="card">
+                    <div class="img-box">
+                      <img src="media_v1/melons_aligned_edges.jpg" alt="Image 1">
+                    </div>
+                    <figcaption>Edge aligned solution</figcaption>
+                  </figure>
+                </div>
+                <figcaption>Melons: G shift: (64,18) R shift: (72,24)</figcaption>
+              </figure>
+
+              <figure>
+                <div class="image-row2">
+                  <figure class="card">
+                    <div class="img-box">
+                      <img src="media_v1/self_portrait_aligned.jpg" alt="Image 1">
+                    </div>
+                    <figcaption>Raw value aligned solution</figcaption>
+                  </figure>
+                  <figure class="card">
+                    <div class="img-box">
+                      <img src="media_v1/self_portrait_aligned_edges.jpg" alt="Image 1">
+                    </div>
+                    <figcaption>Edge aligned solution</figcaption>
+                  </figure>
+                </div>
+                <figcaption>Self Portrait: G shift: (64,34) R shift: (76,48) </figcaption>
+              </figure>
+
+              <figure>
+                <div class="image-row2">
+                  <figure class="card">
+                    <div class="img-box">
+                      <img src="media_v1/siren_aligned.jpg" alt="Image 1">
+                    </div>
+                    <figcaption>Raw value aligned solution</figcaption>
+                  </figure>
+                  <figure class="card">
+                    <div class="img-box">
+                      <img src="media_v1/siren_aligned_edges.jpg" alt="Image 1">
+                    </div>
+                    <figcaption>Edge aligned solution</figcaption>
+                  </figure>
+                </div>
+                <figcaption>Siren: G shift: (48,-12) R shift: (66,-18)</figcaption>
+              </figure>
+
+              <figure>
+                <div class="image-row2">
+                  <figure class="card">
+                    <div class="img-box">
+                      <img src="media_v1/three_generations_aligned.jpg" alt="Image 1">
+                    </div>
+                    <figcaption>Raw value aligned solution</figcaption>
+                  </figure>
+                  <figure class="card">
+                    <div class="img-box">
+                      <img src="media_v1/three_generations_aligned_edges.jpg" alt="Image 1">
+                    </div>
+                    <figcaption>Edge aligned solution</figcaption>
+                  </figure>
+                </div>
+                <figcaption>Three generations: G shift: (52,16) R shift: (68,20) <figcaption>
+              </figure>
+
+
+
+
+
+        </section>
+
+        <!-- PART 3 -->
+        <section id="part3" class="card">
+          <div class="overline">Part 3</div>
+          <h2>Additional examples from the Prokudin-Gorskii collection</h2>
+          <div class="stack">
+            <p>I have used the following three pictures as examples of my own choosing from the Prokudin-Gorskii collection</p>
+            
+            <figure>
+                <div class="image-row2">
+                  <figure class="card">
+                    <div class="img-box">
+                      <img src="media_v1/mosque_naive.jpg" alt="Image 1">
+                    </div>
+                    <figcaption>Naive solution</figcaption>
+                  </figure>
+                  <figure class="card">
+                    <div class="img-box">
+                      <img src="media_v1/mosque_aligned.jpg" alt="Image 1">
+                    </div>
+                    <figcaption>Raw value aligned solution</figcaption>
+                  </figure>
+                </div>
+                <figcaption>Mosque<figcaption>
+            </figure>
+            
+            <figure>
+                <div class="image-row2">
+                  <figure class="card">
+                    <div class="img-box">
+                      <img src="media_v1/train_naive.jpg" alt="Image 1">
+                    </div>
+                    <figcaption>Naive solution</figcaption>
+                  </figure>
+                  <figure class="card">
+                    <div class="img-box">
+                      <img src="media_v1/train_aligned.jpg" alt="Image 1">
+                    </div>
+                    <figcaption>Raw value aligned solution</figcaption>
+                  </figure>
+                </div>
+                <figcaption>Train<figcaption>
+            </figure>
+            
+            <figure>
+                <div class="image-row2">
+                  <figure class="card">
+                    <div class="img-box">
+                      <img src="media_v1/stone_gate_naive.jpg" alt="Image 1">
+                    </div>
+                    <figcaption>Naive solution</figcaption>
+                  </figure>
+                  <figure class="card">
+                    <div class="img-box">
+                      <img src="media_v1/stone_gate_aligned.jpg" alt="Image 1">
+                    </div>
+                    <figcaption>Raw value aligned solution</figcaption>
+                  </figure>
+                </div>
+                <figcaption>Stone gate<figcaption>
+            </figure>
+        </section>
+        
+        <!-- PART 4 -->
+        <section id="part4" class="card">
+          <div class="overline">Part 4</div>
+          <h2>Limitations of my algorithm</h2>
+          <div class="stack">
+            <p>The alignment algorithm sometimes failed to align the channels for the large tif images. Even with the more advanced 
+              usage of the edges it sometimes failed to correctly align the channels. This is probably due to the search area being too small and the 
+              Euclidean distance returning local minima that result in incorrect shifts.
+            </p>
+        </section>
+
+        <!-- PART 5 -->
+        <section id="part5" class="card">
+          <div class="overline">Part 5</div>
+          <h2>Bells and whistles implemented</h2>
+          <div class="stack">
+            <p><b>Better features:</b> I implemented an alignment approach on edges using a Sobel edge detection as preprocessing (see section 2).</p>        
+                
+        </section>
+
+      </main>
+
+    <footer>
+      © <span id="year"></span> — Konstantin Wehmeyer
+    </footer>
+  </div>
+
+  <script>
+    // Active link highlighting based on scroll position
+    const sections = [
+      { id: 'overview', link: 'lnk-overview' },
+      { id: 'part1', link: 'lnk-part1' },
+      { id: 'part2', link: 'lnk-part2' },
+      { id: 'part3', link: 'lnk-part3' }
+    ];
+
+    const linkMap = new Map(sections.map(s => [s.id, document.getElementById(s.link)]));
+
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        const l = linkMap.get(entry.target.id);
+        if (!l) return;
+        if (entry.isIntersecting) {
+          // remove active
+          linkMap.forEach(a => a.classList.remove('active'));
+          l.classList.add('active');
+        }
+      })
+    }, { rootMargin: '-40% 0px -55% 0px', threshold: 0.02 });
+
+    sections.forEach(s => {
+      const el = document.getElementById(s.id);
+      if (el) io.observe(el);
+    });
+
+    // Year in footer
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
