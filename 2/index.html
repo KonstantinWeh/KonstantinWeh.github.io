@@ -1,0 +1,950 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Project 2</title>
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+  <header class="hero">
+    <div class="hero-inner wrap">
+      <a class="brand" href="#top">
+        <div class="container" aria-hidden="true"><img src="../1/UCB_logo.png" alt=""></div>
+        <div class="brand-title">K. Wehmeyer - CS180 - Project 2</div>
+      </a>
+      <nav aria-label="Sections">
+        <a href="#overview" id="lnk-overview">Overview</a>
+        <a href="#part1" id="lnk-part1">Part 1</a>
+        <a href="#part2" id="lnk-part2">Part 2</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="wrap">
+    <div class="hero-blurb" id="top">
+      <h1>Fun with Filters and Frequencies!</h1>
+    </div>
+
+
+
+      <main class="stack">
+        <!-- OVERVIEW -->
+        <section id="overview" class="card">
+          <div class="overline">Overview</div>
+          <h2>Project 2</h2>
+          <div class="stack">
+            <p>This project 2 explores different filters and frequencies.</p>
+            <p>My most important learning from this project is to always be diligent when writing the function to create
+              the Gaussian and Laplacian stacks. I had a bit of a problem of not being able to reconstruct the images from the 
+            stack and this was because the lowest frequency was missing in the Laplacian stack. </p>
+
+          </div>
+        </section>
+
+        <!-- PART 1 -->
+        <section id="part1" class="card">
+          <div class="overline">Part 1: Fun with Filter</div>
+          <h2>Part 1.1 - Convolutions from Scratch!</h2>
+          <div class="stack">
+            <p>
+              I have listed the results from the different convolutions below with the respective runtimes for each function (four for loops, two for loops, scipy.signal.convolve2d). 
+            </p>
+            <p>
+              The code for the four loop implementation is as follows:
+              <pre>
+                <code>
+                # four for loop implementation
+                def four_for_loop(img, filter):
+                  img = img.astype(np.float32)
+                  result = np.array([])
+                  for i in range(len(img)):
+                    line_result = np.array([])
+                    for j in range(len(img[0])):
+                      dot_product = 0
+                      for k in range(len(filter)):
+                        for l in range(len(filter[0])):
+                          if i+k < 0 or i+k >= len(img) or j+l < 0 or j+l >= len(img[0]):
+                            continue
+                          dot_product += img[i+k][j+l] * filter[k][l]
+                      line_result = np.append(line_result, dot_product)
+                    result = np.append(result, line_result)
+                  return result.reshape(len(img), len(img[0]))
+                </code>
+              </pre>
+              For the two loops it is:
+              <pre>  
+                <code>
+                  
+                  # two for loops
+                  def two_for_loop(img, filter):
+                    img = img.astype(np.float32)
+                    result = np.array([])
+                    for i in range(len(img)-len(filter)):
+                      line_result = np.array([])
+                      for j in range(len(img[0])-len(filter[0])):
+                        dot_product = np.sum(img[i:i+len(filter), j:j+len(filter[0])] * filter)
+                        line_result = np.append(line_result, dot_product)
+                      result = np.append(result, line_result)
+                    return result.reshape(len(img)-len(filter), len(img[0])-len(filter[0]))
+                </code>
+              </pre>
+            </p>
+
+              <table border="1" cellpadding="8" cellspacing="0" style="border-collapse:collapse; text-align:left;">
+              <thead>
+                <tr>
+                  <th>Filter</th>
+                  <th>Result</th>
+                  <th>Four for loops</th>
+                  <th>Two for loops</th>
+                  <th>scipy.signal.convolve2d</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>D_x</td>
+                  <td><img src="./media/selfie_d_x.png" alt="Row 1 thumbnail" width="100" height="120"></td>
+                  <td>1.4462 seconds</td>
+                  <td>2.4307 seconds</td>
+                  <td>0.0044 seconds</td>
+                </tr>
+                <tr>
+                  <td>D_y</td>
+                  <td><img src="./media/selfie_d_y.png" alt="Row 2 thumbnail" width="100" height="120"></td>
+                  <td>1.5268 seconds</td>
+                  <td>3.5698 seconds</td>
+                  <td>0.0064 seconds</td>
+                </tr>
+                <tr>
+                  <td>9x9 filter</td>
+                  <td><img src="./media/selfie_filter_9x9.png" alt="Row 3 thumbnail" width="100" height="120"></td>
+                  <td>15.0494 seconds</td>
+                  <td>3.5590 seconds</td>
+                  <td>0.0436 seconds</td>
+                </tr>
+              </tbody>
+            </table>
+
+          </div>
+          
+          <h2>Part 1.2: Finite Difference Operator</h2>
+          
+          <p>The magnitude image and the edge images with different thresholds can be found below.</p>
+          <br>
+          <figure>
+              <div class="image-row5">
+                <figure class="card">
+                  <div class="img-box">
+                    <img src="./media/cameraman_mag.png" alt="Image 1">
+                  </div>
+                  <figcaption>Magnitude image</figcaption>
+                </figure>
+                <figure class="card">
+                  <div class="img-box">
+                    <img src="./media/cameraman_mag_0.1.png" alt="Image 1">
+                  </div>
+                  <figcaption>Threshold: 0.1</figcaption>
+                </figure>
+                <figure class="card">
+                  <div class="img-box">
+                    <img src="./media/cameraman_mag_0.2.png" alt="Image 1">
+                  </div>
+                  <figcaption>Threshold: 0.2</figcaption>
+                </figure>
+                <figure class="card">
+                  <div class="img-box">
+                    <img src="./media/cameraman_mag_0.3.png" alt="Image 1">
+                  </div>
+                  <figcaption>Threshold: 0.3</figcaption>
+                </figure>
+                <figure class="card">
+                  <div class="img-box">
+                    <img src="./media/cameraman_mag_0.4.png" alt="Image 1">
+                  </div>
+                  <figcaption>Threshold: 0.4</figcaption>
+                </figure>
+              </div>
+            </figure>
+            <br>
+            <br>
+          <figure>
+              <div class="image-row5">
+                <figure class="card">
+                  <div class="img-box">
+                    <img src="./media/cameraman_mag_0.5.png" alt="Image 1">
+                  </div>
+                  <figcaption>Threshold: 0.5</figcaption>
+                </figure>
+                <figure class="card">
+                  <div class="img-box">
+                    <img src="./media/cameraman_mag_0.6.png" alt="Image 1">
+                  </div>
+                  <figcaption>Threshold: 0.6</figcaption>
+                </figure>
+                <figure class="card">
+                  <div class="img-box">
+                    <img src="./media/cameraman_mag_0.7.png" alt="Image 1">
+                  </div>
+                  <figcaption>Threshold: 0.7</figcaption>
+                </figure>
+                <figure class="card">
+                  <div class="img-box">
+                    <img src="./media/cameraman_mag_0.8.png" alt="Image 1">
+                  </div>
+                  <figcaption>Threshold: 0.8</figcaption>
+                </figure>
+                <figure class="card">
+                  <div class="img-box">
+                    <img src="./media/cameraman_mag_0.9.png" alt="Image 1">
+                  </div>
+                  <figcaption>Threshold: 0.9</figcaption>
+                </figure>
+              </div>
+            </figure>
+            <p>Based on the qualitative assessment, a threshold of about 0.3 seems the best.</p>
+
+
+            <h2>Part 1.3: Derivative of Gaussian (DoG) Filter</h2>
+
+            <p>The gaussian blur image and the edge images with different thresholds can be found below.</p>
+          <br>
+          <figure>
+              <div class="image-row5">
+                <figure class="card">
+                  <div class="img-box">
+                    <img src="./media/cameraman_gaussian.png" alt="Image 1">
+                  </div>
+                  <figcaption>Gaussian blur with kernel size 10 and sigma 2</figcaption>
+                </figure>
+                <figure class="card">
+                  <div class="img-box">
+                    <img src="./media/cameraman_mag_gaussian_0.1.png" alt="Image 1">
+                  </div>
+                  <figcaption>Threshold: 0.1</figcaption>
+                </figure>
+                <figure class="card">
+                  <div class="img-box">
+                    <img src="./media/cameraman_mag_gaussian_0.2.png" alt="Image 1">
+                  </div>
+                  <figcaption>Threshold: 0.2</figcaption>
+                </figure>
+                <figure class="card">
+                  <div class="img-box">
+                    <img src="./media/cameraman_mag_gaussian_0.3.png" alt="Image 1">
+                  </div>
+                  <figcaption>Threshold: 0.3</figcaption>
+                </figure>
+                <figure class="card">
+                  <div class="img-box">
+                    <img src="./media/cameraman_mag_gaussian_0.4.png" alt="Image 1">
+                  </div>
+                  <figcaption>Threshold: 0.4</figcaption>
+                </figure>
+              </div>
+            </figure>
+            <br>
+            <br>
+          <figure>
+              <div class="image-row5">
+                <figure class="card">
+                  <div class="img-box">
+                    <img src="./media/cameraman_mag_gaussian_0.5.png" alt="Image 1">
+                  </div>
+                  <figcaption>Threshold: 0.5</figcaption>
+                </figure>
+                <figure class="card">
+                  <div class="img-box">
+                    <img src="./media/cameraman_mag_gaussian_0.6.png" alt="Image 1">
+                  </div>
+                  <figcaption>Threshold: 0.6</figcaption>
+                </figure>
+                <figure class="card">
+                  <div class="img-box">
+                    <img src="./media/cameraman_mag_gaussian_0.7.png" alt="Image 1">
+                  </div>
+                  <figcaption>Threshold: 0.7</figcaption>
+                </figure>
+                <figure class="card">
+                  <div class="img-box">
+                    <img src="./media/cameraman_mag_gaussian_0.8.png" alt="Image 1">
+                  </div>
+                  <figcaption>Threshold: 0.8</figcaption>
+                </figure>
+                <figure class="card">
+                  <div class="img-box">
+                    <img src="./media/cameraman_mag_gaussian_0.9.png" alt="Image 1">
+                  </div>
+                  <figcaption>Threshold: 0.9</figcaption>
+                </figure>
+              </div>
+            </figure>
+            <h3>What differences do you see?</h3>
+            <p>With a gaussian blur, the edges of the magnitude images are more pronounced and thicker. Consequently, the threshold
+              images have a thicker and more distinct border as well. Now, a threshold of 0.2 gives good noise reduction while preserving most edges.
+
+            </p>
+            <br>
+            <p>Now we can do the same thing with a single convolution instead of two by creating a derivative of gaussian filters. Convolve the gaussian with D_x and D_y and display the resulting DoG filters as images.</p>
+            
+          <figure>
+              <div class="image-row2">
+                <figure class="card">
+                  <div class="img-box">
+                    <img src="./media/cameraman_gaussian_d_x.png" alt="Image 1">
+                  </div>
+                  <figcaption>Gaussian * D_x</figcaption>
+                </figure>
+                <figure class="card">
+                  <div class="img-box">
+                    <img src="./media/cameraman_gaussian_d_y.png" alt="Image 1">
+                  </div>
+                  <figcaption>Gaussian * D_y</figcaption>
+                </figure>
+              </div>
+              <figcaption>DoG filters as images</figcaption>
+            </figure>
+            
+            <p>The gaussian can be convolved with D_x and D_y respectively to achieve the blurred edge detection in one step.
+              The resulting images are the same, see below.
+            </p>
+            
+            <figure>
+                <div class="image-row2">
+                  <figure class="card">
+                    <div class="img-box">
+                      <img src="./media/cameraman_gaussian.png" alt="Image 1">
+                    </div>
+                    <figcaption>Blur and gaussian</figcaption>
+                  </figure>
+                  <figure class="card">
+                    <div class="img-box">
+                      <img src="./media/cameraman_gaussian_onestep.png" alt="Image 1">
+                    </div>
+                    <figcaption>Derivative of gaussian</figcaption>
+                  </figure>
+                </div>
+                <figcaption>Two-step (blur and gaussian) and one-step (derivative of gaussian) approach</figcaption>
+              </figure>
+
+          
+        </section>
+
+        <!-- PART 2 -->
+        <section id="part2" class="card">
+          <div class="overline">Part 2: Fun with Frequencies!</div>
+          <h2>Part 2.1: Image "Sharpening"</h2>
+          <div class="stack">
+
+           <p>The image sharpening is performed on the three images below. In each example, you can see the unsharp and blurred image
+            as well as the high frequency components and the resulting sharpened image. 
+           </p> 
+
+                      
+            <figure>
+                <div class="image-row4">
+                  <figure class="card">
+                    <div class="img-box">
+                      <img src="./media/taj.jpg" alt="Image 1">
+                    </div>
+                    <figcaption>Original unsharp image</figcaption>
+                  </figure>
+                  <figure class="card">
+                    <div class="img-box">
+                      <img src="./media/taj_blurred.png" alt="Image 1">
+                    </div>
+                    <figcaption>Blurred image</figcaption>
+                  </figure>
+                  <figure class="card">
+                    <div class="img-box">
+                      <img src="./media/taj_high_frequencies.png" alt="Image 1">
+                    </div>
+                    <figcaption>High frequency components</figcaption>
+                  </figure>
+                  <figure class="card">
+                    <div class="img-box">
+                      <img src="./media/taj_sharpened.png" alt="Image 1">
+                    </div>
+                    <figcaption>Sharpened image</figcaption>
+                  </figure>
+                </div>
+                <figcaption>Given Taj example</figcaption>
+              </figure>
+            <figure>
+                <div class="image-row4">
+                  <figure class="card">
+                    <div class="img-box">
+                      <img src="./media/stadium.jpg" alt="Image 1">
+                    </div>
+                    <figcaption>Original unsharp image</figcaption>
+                  </figure>
+                  <figure class="card">
+                    <div class="img-box">
+                      <img src="./media/stadium_blurred.png" alt="Image 1">
+                    </div>
+                    <figcaption>Blurred image</figcaption>
+                  </figure>
+                  <figure class="card">
+                    <div class="img-box">
+                      <img src="./media/stadium_high_frequencies.png" alt="Image 1">
+                    </div>
+                    <figcaption>High frequency components</figcaption>
+                  </figure>
+                  <figure class="card">
+                    <div class="img-box">
+                      <img src="./media/stadium_sharpened.png" alt="Image 1">
+                    </div>
+                    <figcaption>Sharpened image</figcaption>
+                  </figure>
+                </div>
+                <figcaption>California memorial stadium</figcaption>
+              </figure>
+
+              <p>For the last example I took a sharp image, unsharpened it artifically to compare the sharpening algorithm to the original.</p>
+
+              <figure>
+                <div class="image-row5">
+                  <figure class="card">
+                    <div class="img-box">
+                      <img src="./media/new_york_original.jpg" alt="Image 1">
+                    </div>
+                    <figcaption>Original sharp image</figcaption>
+                  </figure>
+                  <figure class="card">
+                    <div class="img-box">
+                      <img src="./media/new_york.jpg" alt="Image 1">
+                    </div>
+                    <figcaption>Artificially unsharpened image</figcaption>
+                  </figure>
+                  <figure class="card">
+                    <div class="img-box">
+                      <img src="./media/new_york_blurred.png" alt="Image 1">
+                    </div>
+                    <figcaption>Blurred image</figcaption>
+                  </figure>
+                  <figure class="card">
+                    <div class="img-box">
+                      <img src="./media/new_york_high_frequencies.png" alt="Image 1">
+                    </div>
+                    <figcaption>High frequency components</figcaption>
+                  </figure>
+                  <figure class="card">
+                    <div class="img-box">
+                      <img src="./media/new_york_sharpened.png" alt="Image 1">
+                    </div>
+                    <figcaption>Sharpened image</figcaption>
+                  </figure>
+                </div>
+                <figcaption>Skyline of New York</figcaption>
+              </figure>
+
+              <p>
+                What you can see at the New York example is that the re-sharpened image can recover some detail and contrast but does not perfectly match the original sharp image. 
+                That is because the blur operation discards some high-frequency information that cannot be fully restored, sharpening can only amplify what remains.
+
+              </p>
+
+
+              <h2>Part 2.2: Hybrid Images</h2>
+
+              <p>To determine the sigma values for the low and highpass, I manually inspected different values:</p>
+
+
+              <figure>
+                <div class="image-row3">
+                  <figure class="card">
+                    <div class="img-box">
+                      <img src="./media/hybrid_s1_5_s2_30.png" alt="Image 1">
+                    </div>
+                    <figcaption>Sigma 2 = 30</figcaption>
+                  </figure>
+                  
+                  <figure class="card">
+                    <div class="img-box">
+                      <img src="./media/hybrid_s1_5_s2_60.png" alt="Image 1">
+                    </div>
+                    <figcaption>Sigma 2 = 60</figcaption>
+                  </figure>
+                  
+                  <figure class="card">
+                    <div class="img-box">
+                      <img src="./media/hybrid_s1_5_s2_90.png" alt="Image 1">
+                    </div>
+                    <figcaption>Sigma 2 = 90</figcaption>
+                  </figure>
+                  
+                </div>
+                <figcaption>Sigma 1 = 5</figcaption>
+              </figure>
+              
+
+              <figure>
+                <div class="image-row3">
+                  <figure class="card">
+                    <div class="img-box">
+                      <img src="./media/hybrid_s1_20_s2_30.png" alt="Image 1">
+                    </div>
+                    <figcaption>Sigma 2 = 30</figcaption>
+                  </figure>
+                  
+                  <figure class="card">
+                    <div class="img-box">
+                      <img src="./media/hybrid_s1_20_s2_60.png" alt="Image 1">
+                    </div>
+                    <figcaption>Sigma 2 = 60</figcaption>
+                  </figure>
+                  
+                  <figure class="card">
+                    <div class="img-box">
+                      <img src="./media/hybrid_s1_20_s2_90.png" alt="Image 1">
+                    </div>
+                    <figcaption>Sigma 2 = 90</figcaption>
+                  </figure>
+                  
+                </div>
+                <figcaption>Sigma 1 = 20</figcaption>
+              </figure>
+              
+
+              <figure>
+                <div class="image-row3">
+                  <figure class="card">
+                    <div class="img-box">
+                      <img src="./media/hybrid_s1_50_s2_30.png" alt="Image 1">
+                    </div>
+                    <figcaption>Sigma 2 = 30</figcaption>
+                  </figure>
+                  
+                  <figure class="card">
+                    <div class="img-box">
+                      <img src="./media/hybrid_s1_50_s2_60.png" alt="Image 1">
+                    </div>
+                    <figcaption>Sigma 2 = 60</figcaption>
+                  </figure>
+                  
+                  <figure class="card">
+                    <div class="img-box">
+                      <img src="./media/hybrid_s1_50_s2_90.png" alt="Image 1">
+                    </div>
+                    <figcaption>Sigma 2 = 90</figcaption>
+                  </figure>
+                  
+                </div>
+                <figcaption>Sigma 1 = 50</figcaption>
+              </figure>
+              
+          </div>
+
+          <p>Another example</p>
+
+           <figure>
+              <div class="image-row3">
+                <figure class="card">
+                  <div class="img-box">
+                    <img src="./media/car_hf.jpg" alt="Image 1">
+                  </div>
+                  <figcaption>Car with high frequency paint</figcaption>
+                </figure>
+                
+                <figure class="card">
+                  <div class="img-box">
+                    <img src="./media/plane_lf.jpg" alt="Image 1">
+                  </div>
+                  <figcaption>Plane with low frequency components</figcaption>
+                </figure>
+                
+                <figure class="card">
+                  <div class="img-box">
+                    <img src="./media/carplane_s1_1_s2_15.png" alt="Image 1">
+                  </div>
+                  <figcaption>Hybrid result image</figcaption>
+                </figure>
+                
+              </div>
+              <figcaption>Sigma 1 = 1, Sigma 2 = 15</figcaption>
+            </figure>
+              
+            <p> 
+              My favorite hybrid image is a mix of a basketball and a bitcoin.
+
+            </p>
+           <figure>
+              <div class="image-row33">
+                <figure class="card">
+                  <div class="img-box">
+                    <img src="./media/coin.jpg" alt="Image 1">
+                  </div>
+                  <figcaption>Coin with high frequency paint</figcaption>
+                </figure>
+                
+                <figure class="card">
+                  <div class="img-box">
+                    <img src="./media/bball.jpg" alt="Image 1">
+                  </div>
+                  <figcaption>Ball with low frequency components</figcaption>
+                </figure>
+                
+                <figure class="card">
+                  <div class="img-box">
+                    <img src="./media/ballcoin_s1_1_s2_2.png" alt="Image 1" height="80%">
+                  </div>
+                  <figcaption>Hybrid result image</figcaption>
+                </figure>
+                
+              </div>
+              <figcaption>Sigma 1 = 1, Sigma 2 = 2</figcaption>
+            </figure>
+            <p>For the coinball the log magnitude of the Fourier transform of the two input images, the filtered images, and the hybrid image can be seen below.</p>
+           
+            <figure>
+              <div class="image-row5">
+                <figure class="card">
+                  <div class="img-box">
+                    <img src="./media/bball_logfft.png" alt="Image 1">
+                  </div>
+                  <figcaption>Baseketball log fft magnitude</figcaption>
+                </figure>
+                
+                <figure class="card">
+                  <div class="img-box">
+                    <img src="./media/coin_logfft.png" alt="Image 1">
+                  </div>
+                  <figcaption>Coin log fft magnitude</figcaption>
+                </figure>
+                
+                <figure class="card">
+                  <div class="img-box">
+                    <img src="./media/ball_lowpassed_logfft.png" alt="Image 1" height="80%">
+                  </div>
+                  <figcaption>Lowpassed baseketball log fft magnitude</figcaption>
+                </figure>
+                <figure class="card">
+                  <div class="img-box">
+                    <img src="./media/coin_highpassed_logfft.png" alt="Image 1" height="80%">
+                  </div>
+                  <figcaption>Highpassed coin log fft magnitude</figcaption>
+                </figure>
+                
+                <figure class="card">
+                  <div class="img-box">
+                    <img src="./media/hybrid_logfft.png" alt="Image 1" height="80%">
+                  </div>
+                  <figcaption>Highpassed coin log fft magnitude</figcaption>
+                </figure>
+                
+              </div>
+              <figcaption>Log fft magnitude spectra for the different images</figcaption>
+            </figure>
+
+
+
+            <h2>Part 2.3: Gaussian and Laplacian Stacks</h2>
+
+            <p>The different levels of the Laplacian stack are shown below for the apple, the orange and the blended image.
+              I have used new apple and orange images to also test the alignment. 
+            </p>
+
+            <figure>
+              <div class="image-row3">
+                <figure class="card">
+                  <div class="img-box3">
+                    <img src="./media/orange_level_0.png" alt="Image 1">
+                  </div>
+                  <figcaption></figcaption>
+                </figure>
+                
+                <figure class="card">
+                  <div class="img-box3">
+                    <img src="./media/apple_level_0.png" alt="Image 1">
+                  </div>
+                  <figcaption></figcaption>
+                </figure>
+                
+                <figure class="card">
+                  <div class="img-box3">
+                    <img src="./media/blend_level_0.png" alt="Image 1">
+                  </div>
+                  <figcaption></figcaption>
+                </figure>
+                
+              </div>
+              <figcaption>High frequency components</figcaption>
+            </figure>
+            <figure>
+              <div class="image-row3">
+                <figure class="card">
+                  <div class="img-box3">
+                    <img src="./media/orange_level_2.png" alt="Image 1">
+                  </div>
+                  <figcaption></figcaption>
+                </figure>
+                
+                <figure class="card">
+                  <div class="img-box3">
+                    <img src="./media/apple_level_2.png" alt="Image 1">
+                  </div>
+                  <figcaption></figcaption>
+                </figure>
+                
+                <figure class="card">
+                  <div class="img-box3">
+                    <img src="./media/blend_level_2.png" alt="Image 1">
+                  </div>
+                  <figcaption></figcaption>
+                </figure>
+                
+              </div>
+              <figcaption>Mid frequency components</figcaption>
+            </figure>
+            <figure>
+              <div class="image-row3">
+                <figure class="card">
+                  <div class="img-box3">
+                    <img src="./media/orange_level_4.png" alt="Image 1">
+                  </div>
+                  <figcaption></figcaption>
+                </figure>
+                
+                <figure class="card">
+                  <div class="img-box3">
+                    <img src="./media/apple_level_4.png" alt="Image 1">
+                  </div>
+                  <figcaption></figcaption>
+                </figure>
+                
+                <figure class="card">
+                  <div class="img-box3">
+                    <img src="./media/blend_level_4.png" alt="Image 1">
+                  </div>
+                  <figcaption></figcaption>
+                </figure>
+                
+              </div>
+              <figcaption>Low frequency components</figcaption>
+            </figure>
+            <figure>
+              <div class="image-row3">
+                <figure class="card">
+                  <div class="img-box3">
+                    <img src="./media/orange_reconstructed.png" alt="Image 1">
+                  </div>
+                  <figcaption></figcaption>
+                </figure>
+                
+                <figure class="card">
+                  <div class="img-box3">
+                    <img src="./media/apple_reconstructed.png" alt="Image 1">
+                  </div>
+                  <figcaption></figcaption>
+                </figure>
+                
+                <figure class="card">
+                  <div class="img-box3">
+                    <img src="./media/blend.png" alt="Image 1">
+                  </div>
+                  <figcaption></figcaption>
+                </figure>
+                
+              </div>
+              <figcaption>Images reconstructed from stack</figcaption>
+            </figure>
+
+            <p>The reconstructed blend from the apple and orange stack is substantially better than the side-by-side image below.</p>
+
+                        <figure>
+              <div class="image-row3">
+                <figure class="card">
+                  <div class="img-box3">
+                    <img src="./media/orange.jpg" alt="Image 1">
+                  </div>
+                  <figcaption>Orange</figcaption>
+                </figure>
+                
+                <figure class="card">
+                  <div class="img-box3">
+                    <img src="./media/apple.jpg" alt="Image 1">
+                  </div>
+                  <figcaption>Apple</figcaption>
+                </figure>
+                
+                <figure class="card">
+                  <div class="img-box3">
+                    <img src="./media/orange_apple_side_by_side.png" alt="Image 1">
+                  </div>
+                  <figcaption>Blend</figcaption>
+                </figure>
+                
+              </div>
+              <figcaption>Raw images side-by-side</figcaption>
+            </figure>
+
+
+        <h2>Part 2.4: Multiresolution Blending for another example</h2>
+
+            <p>Another example is the blend of a hotdog with a banana. 
+            </p>
+
+            <figure>
+              <div class="image-row2">
+                <figure class="card">
+                  <div class="img-box">
+                    <img src="./media/banana_hotdog_side_by_side.png" alt="Image 1">
+                  </div>
+                  <figcaption>Trivial combination</figcaption>
+                </figure>
+                
+                <figure class="card">
+                  <div class="img-box">
+                    <img src="./media/blend_banana_hotdog.png" alt="Image 1">
+                  </div>
+                  <figcaption>Blended combination</figcaption>
+                </figure>
+ 
+                
+              </div>
+              <figcaption>Combination of a hotdog and a banana</figcaption>
+          
+            <p>And my favorite example, where Obama is merged with a brocolli. 
+            </p>
+
+            <figure>
+              <div class="image-row2">
+                <figure class="card">
+                  <div class="img-box2">
+                    <img src="./media/obrocolli_naive.png" alt="Image 1">
+                  </div>
+                  <figcaption>Trivial combination</figcaption>
+                </figure>
+                
+                <figure class="card">
+                  <div class="img-box2">
+                    <img src="./media/obrocolli_blend.png" alt="Image 1">
+                  </div>
+                  <figcaption>Blended combination</figcaption>
+                </figure>
+ 
+                
+              </div>
+              <figcaption>Combination of Obama with a brocolli</figcaption>
+          
+                          <figure>
+              <div class="image-row3">
+                <figure class="card">
+                  <div class="img-box3">
+                    <img src="./media/obama_level_0.png" alt="Image 1">
+                  </div>
+                  <figcaption></figcaption>
+                </figure>
+                
+                <figure class="card">
+                  <div class="img-box3">
+                    <img src="./media/brocolli_level_0.png" alt="Image 1">
+                  </div>
+                  <figcaption></figcaption>
+                </figure>
+                
+                <figure class="card">
+                  <div class="img-box3">
+                    <img src="./media/obrocolli_level_0.png" alt="Image 1">
+                  </div>
+                  <figcaption></figcaption>
+                </figure>
+                
+              </div>
+              <figcaption>High frequency components</figcaption>
+            </figure>
+            <figure>
+              <div class="image-row3">
+                <figure class="card">
+                  <div class="img-box3">
+                    <img src="./media/obama_level_2.png" alt="Image 1">
+                  </div>
+                  <figcaption></figcaption>
+                </figure>
+                
+                <figure class="card">
+                  <div class="img-box3">
+                    <img src="./media/brocolli_level_2.png" alt="Image 1">
+                  </div>
+                  <figcaption></figcaption>
+                </figure>
+                
+                <figure class="card">
+                  <div class="img-box3">
+                    <img src="./media/obrocolli_level_2.png" alt="Image 1">
+                  </div>
+                  <figcaption></figcaption>
+                </figure>
+                
+              </div>
+              <figcaption>Mid frequency components</figcaption>
+            </figure>
+            <figure>
+              <div class="image-row3">
+                <figure class="card">
+                  <div class="img-box3">
+                    <img src="./media/obama_level_4.png" alt="Image 1">
+                  </div>
+                  <figcaption></figcaption>
+                </figure>
+                
+                <figure class="card">
+                  <div class="img-box3">
+                    <img src="./media/brocolli_level_4.png" alt="Image 1">
+                  </div>
+                  <figcaption></figcaption>
+                </figure>
+                
+                <figure class="card">
+                  <div class="img-box3">
+                    <img src="./media/obrocolli_level_4.png" alt="Image 1">
+                  </div>
+                  <figcaption></figcaption>
+                </figure>
+                
+              </div>
+              <figcaption>Low frequency components</figcaption>
+            </figure>
+
+            
+        </section>       
+      </main>
+
+    <footer>
+      © <span id="year"></span> — Konstantin Wehmeyer
+    </footer>
+  </div>
+
+  <script>
+    // Active link highlighting based on scroll position
+    const sections = [
+      { id: 'overview', link: 'lnk-overview' },
+      { id: 'part1', link: 'lnk-part1' },
+      { id: 'part2', link: 'lnk-part2' },
+      { id: 'part3', link: 'lnk-part3' }
+    ];
+
+    const linkMap = new Map(sections.map(s => [s.id, document.getElementById(s.link)]));
+
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        const l = linkMap.get(entry.target.id);
+        if (!l) return;
+        if (entry.isIntersecting) {
+          // remove active
+          linkMap.forEach(a => a.classList.remove('active'));
+          l.classList.add('active');
+        }
+      })
+    }, { rootMargin: '-40% 0px -55% 0px', threshold: 0.02 });
+
+    sections.forEach(s => {
+      const el = document.getElementById(s.id);
+      if (el) io.observe(el);
+    });
+
+    // Year in footer
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
