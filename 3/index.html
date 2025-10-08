@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Project 3</title>
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+  <header class="hero">
+    <div class="hero-inner wrap">
+      <a class="brand" href="#top">
+        <div class="container" aria-hidden="true"><img src="../1/UCB_logo.png" alt=""></div>
+        <div class="brand-title">K. Wehmeyer - CS180 - Project 3</div>
+      </a>
+      <nav aria-label="Sections">
+        <a href="#overview" id="lnk-overview">Overview</a>
+        <a href="#task-a1" id="lnk-task-a1">A.1</a>
+        <a href="#task-a2" id="lnk-task-a2">A.2</a>
+        <a href="#task-a3" id="lnk-task-a3">A.3</a>
+        <a href="#task-a4" id="lnk-task-a4">A.4</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="wrap">
+    <div class="hero-blurb" id="top">
+      <h1>[Auto]Stitching Photo Mosaics</h1>
+    </div>
+
+
+
+      <main class="stack">
+        <!-- OVERVIEW -->
+        <section id="overview" class="card">
+          <div class="overline">Overview</div>
+          <h2>Project 3: [Auto]Stitching Photo Mosaics</h2>
+          <div class="stack">
+            <p>This project is all about stitching together many photographs to create larger composite images. The project involves shooting photographs with projective transformations, recovering homographies between image pairs, warping images for alignment, and blending them into seamless mosaics.</p>
+            <p>The project is divided into four main tasks:</p>
+            <ul>
+              <li><strong>A.1: Shoot the Pictures</strong> - Capture photographs with projective transformations</li>
+              <li><strong>A.2: Recover Homographies</strong> - Compute transformation matrices between image pairs</li>
+              <li><strong>A.3: Warp the Images</strong> - Implement image warping with different interpolation methods</li>
+              <li><strong>A.4: Blend the Images into a Mosaic</strong> - Create seamless composite images</li>
+            </ul>
+          </div>
+        </section>
+
+        <!-- TASK A.1 -->
+        <section id="task-a1" class="card">
+          <div class="overline">Task A.1</div>
+          <h2>Shoot the Pictures</h2>
+          <div class="stack">
+            <p>Shoot two or more photographs so that the transforms between them are projective (a.k.a. perspective). The most common way is to fix the center of projection (COP) and rotate your camera while capturing photos.</p>
+            
+           <h3>Deliverables:</h3>
+            <p>Show at least 2 sets of images with projective transformations between them (fixed center of projection, rotate camera).</p>
+
+            <!-- Image sets for projective transformations -->
+            <figure>
+                <div class="image-row3">
+                  <figure class="card">
+                    <div class="img-box">
+                    <img src="./media/left.jpg" alt="Left image">
+                    </div>
+                  <figcaption>Left image</figcaption>
+                  </figure>
+                  <figure class="card">
+                    <div class="img-box">
+                    <img src="./media/middle_left.jpg" alt="Middle left image">
+                    </div>
+                  <figcaption>Middle left image</figcaption>
+                  </figure>
+                  <figure class="card">
+                    <div class="img-box">
+                    <img src="./media/middle_right.jpg" alt="Middle right image">
+                    </div>
+                  <figcaption>Middle right image</figcaption>
+                  </figure>
+                </div>
+              <figcaption>Image set with projective transformations (fixed center of projection, rotated camera)</figcaption>
+                  </figure>
+
+            <!-- Kitchen image set -->
+            <figure>
+                <div class="image-row3">
+                  <figure class="card">
+                    <div class="img-box">
+                    <img src="./media/kitchen_left.jpg" alt="Kitchen left image">
+                    </div>
+                  <figcaption>Kitchen left image</figcaption>
+                  </figure>
+                  <figure class="card">
+                    <div class="img-box">
+                    <img src="./media/kitchen_middle.jpg" alt="Kitchen middle image">
+                    </div>
+                  <figcaption>Kitchen middle image</figcaption>
+                  </figure>
+                  <figure class="card">
+                    <div class="img-box">
+                    <img src="./media/kitchen_right.jpg" alt="Kitchen right image">
+                    </div>
+                  <figcaption>Kitchen right image</figcaption>
+                  </figure>
+                </div>
+              <figcaption>Kitchen image set with projective transformations (fixed center of projection, rotated camera)</figcaption>
+                  </figure>
+
+            <!-- Locker room image set -->
+            <figure>
+                <div class="image-row3">
+                  <figure class="card">
+                    <div class="img-box">
+                    <img src="./media/locker_left.jpg" alt="Locker left image">
+                    </div>
+                  <figcaption>Locker left image</figcaption>
+                  </figure>
+                  <figure class="card">
+                    <div class="img-box">
+                    <img src="./media/locker_middle.jpg" alt="Locker middle image">
+                    </div>
+                  <figcaption>Locker middle image</figcaption>
+                  </figure>
+                  <figure class="card">
+                    <div class="img-box">
+                    <img src="./media/locker_right.jpg" alt="Locker right image">
+                    </div>
+                  <figcaption>Locker right image</figcaption>
+                  </figure>
+                </div>
+              <figcaption>Locker room image set with projective transformations (fixed center of projection, rotated camera)</figcaption>
+                  </figure>
+                </div>
+        </section>
+
+        <!-- TASK A.2 -->
+        <section id="task-a2" class="card">
+          <div class="overline">Task A.2</div>
+          <h2>Recover Homographies</h2>
+          <div class="stack">
+            <p>Before you can warp your images into alignment, you need to recover the parameters of the transformation between each pair of images. In our case, the transformation is a homography: <strong>p'=Hp</strong>, where H is a 3x3 matrix with 8 degrees of freedom.</p>
+
+
+            <h3>Display system of equations</h3>
+            <p>For one correspondence pair (x,y) → (u,v), the system of equations is:</p>
+            
+            <div style="text-align: center; margin: 20px 0;">
+              <div style="display: inline-block; background: #f5f5f5; padding: 20px; border-radius: 8px; font-family: 'Courier New', monospace;">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                  <div style="text-align: right;">
+                    <div>[x&nbsp;&nbsp;&nbsp;y&nbsp;&nbsp;&nbsp;1&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;&nbsp;-ux&nbsp;&nbsp;&nbsp;-uy]</div>
+                    <div>[0&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;&nbsp;x&nbsp;&nbsp;&nbsp;y&nbsp;&nbsp;&nbsp;1&nbsp;&nbsp;&nbsp;-vx&nbsp;&nbsp;&nbsp;-vy]</div>
+                    </div>
+                  <div style="font-size: 24px;">×</div>
+                  <div style="text-align: center;">
+                    <div>[h₁]</div>
+                    <div>[h₂]</div>
+                    <div>[h₃]</div>
+                    <div>[h₄]</div>
+                    <div>[h₅]</div>
+                    <div>[h₆]</div>
+                    <div>[h₇]</div>
+                    <div>[h₈]</div>
+                    </div>
+                  <div style="font-size: 24px;">=</div>
+                  <div style="text-align: center;">
+                    <div>[u]</div>
+                    <div>[v]</div>
+                    </div>
+                    </div>
+                </div>
+          </div>
+
+            <p>Where:</p>
+            <ul>
+              <li><strong>a₁ᵀ</strong> = [x y 1 0 0 0 -ux -uy]</li>
+              <li><strong>a₂ᵀ</strong> = [0 0 0 x y 1 -vx -vy]</li>
+              <li><strong>b₁</strong> = u</li>
+              <li><strong>b₂</strong> = v</li>
+            </ul>
+            
+            <p>This gives us 2 equations for 8 unknowns. With n correspondence pairs, we get 2n equations, forming an overdetermined system that can be solved using least squares when n ≥ 4.</p>
+            <p>This is exactly what we discussed in class. The total system of equations can be found below in python code.</p>
+            
+            <h3>Implement computeH(im1_pts, im2_pts) function</h3>
+            <p>Write a function of the form:</p>
+            <pre><code>H = computeH(im1_pts, im2_pts)</code></pre>
+            <p>where <code>im1_pts</code> and <code>im2_pts</code> are n-by-2 matrices holding the (x,y) locations of n point correspondences from the two images and H is the recovered 3x3 homography matrix.</p>
+            
+            <p><strong>Implementation:</strong> The function constructs the matrix A (2n×8) and vector b (2n×1) as shown above, then uses least squares to solve Ah=b. The solution h contains the 8 homography parameters, which are reshaped into the 3×3 matrix H.</p>
+            
+            <pre><code>
+              # Construct matrix A using numpy indexing
+              A[0::2, 0:3] = np.stack([x, y, np.ones(n)], axis=1)  # First row of each pair
+              A[1::2, 3:6] = np.stack([x, y, np.ones(n)], axis=1)  # Second row of each pair
+              A[0::2, 6]   = -u * x                                # -ux terms
+              A[0::2, 7]   = -u * y                                # -uy terms
+              A[1::2, 6]   = -v * x                                # -vx terms
+              A[1::2, 7]   = -v * y                                # -vy terms
+
+              # Construct vector b
+              b[0::2] = u  # u coordinates
+              b[1::2] = v  # v coordinates
+
+              # Solve using least squares
+              h, residuals, rank, s = np.linalg.lstsq(A, b, rcond=None)</code></pre>
+            
+
+
+
+            <h3>Show correspondences visualized on the images</h3>
+            <p>The 8 correspondences (manually selected with ginput) are displayed as red dots on the images for the first and second image as an example.</p>
+            <figure>
+              <div class="image-row2">
+                <figure class="card">
+                  <div class="img-box">
+                    <img src="./media/im1_with_points.jpg" alt="Left image">
+                  </div>
+                  <figcaption>Left image</figcaption>
+                </figure>
+                <figure class="card">
+                  <div class="img-box">
+                    <img src="./media/im2_with_points.jpg" alt="Middle left image">
+                  </div>
+                  <figcaption>Middle left image</figcaption>
+                </figure>
+              </div>
+              <figcaption>Image set with projective transformations (fixed center of projection, rotated camera)</figcaption>
+            </figure>
+            
+
+            
+            <!-- Content for correspondences visualization will be added here -->
+
+            <h3>Show recovered homography matrix</h3>
+            <p>The computed 3x3 homography matrix H for the first and second example images is shown below.</p>
+            
+            <div class="code-block">
+                <pre><code>
+                  H = [[ 2.11756002e+00 -1.50286932e-02 -5.99626144e+03]
+                      [ 7.69110234e-01  1.90987889e+00 -2.61261782e+03]
+                      [ 2.63190503e-04 -5.76557477e-06  1.00000000e+00]]</code></pre>
+            </div>
+            
+       
+        </section>
+
+        <!-- TASK A.3 -->
+        <section id="task-a3" class="card">
+          <div class="overline">Task A.3</div>
+          <h2>Warp the Images</h2>
+          <div class="stack">
+           
+            <h3>Implement warpImageNearestNeighbor(im, H) and warpImageBilinear(im, H) using inverse warping</h3>
+
+            <p>The two different interpolation methods differ in how they pick the pixel values for the output image. Nearest Neighbor Interpolation rounds the coordinates to the nearest pixel value, while Bilinear Interpolation uses a weighted average of the four neighboring pixels.</p>
+            <p>In code, this difference is between these lines:</p>            
+            <pre><code>
+              xi = np.rint(x).astype(np.int64)
+              yi = np.rint(y).astype(np.int64)
+
+              flat_out[inbounds, :] = im[yi[inbounds], xi[inbounds], :]
+            </code></pre>
+            <p>and</p>
+            <pre><code>
+              x0 = np.floor(x[inbounds]).astype(np.int64)
+              y0 = np.floor(y[inbounds]).astype(np.int64)
+              x1 = np.minimum(x0 + 1, w_in - 1)
+              y1 = np.minimum(y0 + 1, h_in - 1)
+
+              wa = (x1 - x[inbounds]) * (y1 - y[inbounds])
+              wb = (x[inbounds] - x0) * (y1 - y[inbounds])
+              wc = (x1 - x[inbounds]) * (y[inbounds] - y0)
+              wd = (x[inbounds] - x0) * (y[inbounds] - y0)
+
+              flat_out[inbounds, :] =  (wa[:, np.newaxis] * im[y0, x0, :] + 
+                                        wb[:, np.newaxis] * im[y0, x1, :] + 
+                                        wc[:, np.newaxis] * im[y1, x0, :] + 
+                                        wd[:, np.newaxis] * im[y1, x1, :])
+            </code></pre>
+            
+            <h3>Apply to 2+ images for rectification</h3>
+
+            <p>I have taken two pictures of rectangular objects and applied the homography to the images to rectify them.</p>
+            <figure>
+              <div class="image-row2">
+                <figure class="card">
+                  <div class="img-box">
+                    <img src="./media/cal_id.jpg" alt="Cal ID">
+            
+                    <figcaption>Original</figcaption>
+                </figure>
+                <figure class="card">
+                  <div class="img-box">
+                    <img src="./media/cal_id_warped.jpg" alt="Rectified image 2">
+                    <figcaption>Rectified</figcaption>
+                </figure>
+              </div>
+              <figcaption>Cal ID</figcaption>
+            </figure>
+
+            <figure>
+              <div class="image-row2">
+                <figure class="card">
+                  <div class="img-box">
+                    <img src="./media/kitchen.jpg" alt="Cal ID">
+            
+                    <figcaption>Original</figcaption>
+                </figure>
+                <figure class="card">
+                  <div class="img-box">
+                    <img src="./media/kitchen_warped.jpg" alt="Rectified image 2">
+                    <figcaption>Rectified</figcaption>
+                </figure>
+              </div>
+              <figcaption>Kitchen drawer</figcaption>
+            </figure>
+
+            <h3>Show comparisons between interpolation methods</h3>
+
+
+            <figure>
+              <div class="image-row2">
+                <figure class="card">
+                  <div class="img-box">
+                    <img src="./media/im1_warped_nearest_neighbor.jpg" alt="Nearest Neighbor">
+            
+                    <figcaption>Nearest Neighbor</figcaption>
+                </figure>
+                <figure class="card">
+                  <div class="img-box">
+                    <img src="./media/im1_warped_bilinear.jpg" alt="Bilinear">
+                    <figcaption>Bilinear</figcaption>
+                </figure>
+              </div>
+              <figcaption>Comparisons between interpolation methods</figcaption>
+            </figure>
+
+            <figure>
+              <div class="img-box interpolation-comparison">
+                <img src="./media/interpolation_comparison.jpg" alt="Interpolation Comparison">
+                <figcaption>Full Comparison (side-by-side)</figcaption>
+              </div>
+            </figure>
+            
+            <figure>
+              <div class="img-box interpolation-comparison">
+                <img src="./media/interpolation_comp_zoom.png" alt="Interpolation Comparison Zoomed">
+                <figcaption>Zoomed-in Comparison</figcaption>
+              </div>
+            </figure>
+            
+            <h3>Discuss trade-offs between speed and quality</h3>
+
+        <!-- INSERT_YOUR_CODE -->
+        <p>
+          <strong>Nearest neighbor</strong> interpolation is significantly faster than bilinear interpolation, as shown by the timing results above (9.49s vs. 27.88s, i.e. nearest neighbor is 2.94x faster). On a large scale, both methods produce similar-looking results, and the differences may not be immediately obvious. 
+          However, when you zoom in (e.g. on the twigs and rails in the zoomed-in comparison), the <strong>quality improvement</strong> from bilinear interpolation becomes quite noticeable: edges are smoother and there are fewer blocky artifacts compared to nearest neighbor. 
+          This makes bilinear interpolation preferable when image quality is important, especially in areas with fine details, while nearest neighbor is a good choice when speed is the priority.
+        </p>
+
+            
+        </section>
+
+        <!-- TASK A.4 -->
+        <section id="task-a4" class="card">
+          <div class="overline">Task A.4</div>
+          <h2>Blend the Images into a Mosaic</h2>
+          <div class="stack">
+            <p>Here are the three source images used for creating the mosaic:</p>
+            
+            <figure>
+              <div class="image-grid">
+                <div class="image-item">
+                  <img src="media/left.jpg" alt="Left Image" />
+                  <figcaption>Left Image</figcaption>
+                </div>
+                <div class="image-item">
+                  <img src="media/middle_left.jpg" alt="Middle Left Image" />
+                  <figcaption>Middle Image</figcaption>
+                </div>
+                <div class="image-item">
+                  <img src="media/middle_right.jpg" alt="Middle Right Image" />
+                  <figcaption>Right Image</figcaption>
+                </div>
+              </div>
+            </figure>
+
+            <p>The final blended mosaic combining all three images:</p>
+            
+            <figure>
+              <div class="image-container">
+                <img src="media/left_middle_right_blended.jpg" alt="Combined Mosaic" />
+                <figcaption>Final Mosaic: Left + Middle + Right</figcaption>
+              </div>
+            </figure>
+
+            <h3>Blending Process</h3>
+            <p>
+              The images were blended using homography transformations and weighted averaging (0.5 weight for each image) in overlapping regions. 
+            </p>
+
+            <h3>Kitchen Mosaic Example</h3>
+            <p>Here's another example using kitchen images to demonstrate the same blending technique:</p>
+            
+            <figure>
+              <div class="image-grid">
+                <div class="image-item">
+                  <img src="media/kitchen_left.jpg" alt="Kitchen Left Image" />
+                  <figcaption>Left Image</figcaption>
+                </div>
+                <div class="image-item">
+                  <img src="media/kitchen_middle.jpg" alt="Kitchen Middle Image" />
+                  <figcaption>Middle Image</figcaption>
+                </div>
+                <div class="image-item">
+                  <img src="media/kitchen_right.jpg" alt="Kitchen Right Image" />
+                  <figcaption>Right Image</figcaption>
+                </div>
+              </div>
+            </figure>
+
+            <p>The final blended kitchen mosaic:</p>
+            
+            <figure>
+              <div class="image-container">
+                <img src="media/kitchen_left_middle_right_blended.jpg" alt="Kitchen Combined Mosaic" />
+                <figcaption>Final Kitchen Mosaic: Left + Middle + Right</figcaption>
+              </div>
+            </figure>
+
+            <h3>Locker Room Mosaic Example</h3>
+            <p>Here's another example using locker room images to demonstrate the same blending technique:</p>
+            
+            <figure>
+              <div class="image-grid">
+                <div class="image-item">
+                  <img src="media/locker_left.jpg" alt="Locker Left Image" />
+                  <figcaption>Left Image</figcaption>
+                </div>
+                <div class="image-item">
+                  <img src="media/locker_middle.jpg" alt="Locker Middle Image" />
+                  <figcaption>Middle Image</figcaption>
+                </div>
+                <div class="image-item">
+                  <img src="media/locker_right.jpg" alt="Locker Right Image" />
+                  <figcaption>Right Image</figcaption>
+                </div>
+              </div>
+            </figure>
+
+            <p>The final blended locker room mosaic:</p>
+            
+            <figure>
+              <div class="image-container">
+                <img src="media/locker_left_middle_right_blended.jpg" alt="Locker Combined Mosaic" />
+                <figcaption>Final Locker Room Mosaic: Left + Middle + Right</figcaption>
+              </div>
+            </figure>
+          </div>
+        </section>       
+      </main>
+
+    <footer>
+      © <span id="year"></span> — Konstantin Wehmeyer
+    </footer>
+  </div>
+
+  <script>
+    // Active link highlighting based on scroll position
+    const sections = [
+      { id: 'overview', link: 'lnk-overview' },
+      { id: 'task-a1', link: 'lnk-task-a1' },
+      { id: 'task-a2', link: 'lnk-task-a2' },
+      { id: 'task-a3', link: 'lnk-task-a3' },
+      { id: 'task-a4', link: 'lnk-task-a4' }
+    ];
+
+    const linkMap = new Map(sections.map(s => [s.id, document.getElementById(s.link)]));
+
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        const l = linkMap.get(entry.target.id);
+        if (!l) return;
+        if (entry.isIntersecting) {
+          // remove active
+          linkMap.forEach(a => a.classList.remove('active'));
+          l.classList.add('active');
+        }
+      })
+    }, { rootMargin: '-40% 0px -55% 0px', threshold: 0.02 });
+
+    sections.forEach(s => {
+      const el = document.getElementById(s.id);
+      if (el) io.observe(el);
+    });
+
+    // Year in footer
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
