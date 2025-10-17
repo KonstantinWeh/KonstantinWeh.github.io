@@ -14,11 +14,15 @@
         <div class="brand-title">K. Wehmeyer - CS180 - Project 3</div>
       </a>
       <nav aria-label="Sections">
-        <a href="#overview" id="lnk-overview">Overview</a>
+        <a href="#overview" id="lnk-overview">Part A</a>
         <a href="#task-a1" id="lnk-task-a1">A.1</a>
         <a href="#task-a2" id="lnk-task-a2">A.2</a>
         <a href="#task-a3" id="lnk-task-a3">A.3</a>
         <a href="#task-a4" id="lnk-task-a4">A.4</a>
+        <a href="#part-b" id="lnk-part-b">Part B</a>
+        <a href="#part-b1" id="lnk-part-b1">B.1</a>
+        <a href="#part-b2" id="lnk-part-b2">B.2</a>
+        <a href="#part-b3" id="lnk-part-b3">B.3</a>
       </nav>
     </div>
   </header>
@@ -34,7 +38,7 @@
         <!-- OVERVIEW -->
         <section id="overview" class="card">
           <div class="overline">Overview</div>
-          <h2>Project 3: [Auto]Stitching Photo Mosaics</h2>
+          <h2>Project 3 Part A: [Auto]Stitching Photo Mosaics</h2>
           <div class="stack">
             <p>This project is all about stitching together many photographs to create larger composite images. The project involves shooting photographs with projective transformations, recovering homographies between image pairs, warping images for alignment, and blending them into seamless mosaics.</p>
             <p>The project is divided into four main tasks:</p>
@@ -460,8 +464,226 @@
             </figure>
           </div>
         </section>       
+
+
+      <section id="part-b" class="card">
+        <div class="overline">Overview</div>
+        <h2>Project 3 Part B: FEATURE MATCHING for AUTOSTITCHING</h2>
+        <div class="stack">
+          <p>The goal of this project is to create a system for automatically stitching images into a mosaic. A secondary goal is to learn how to read and implement a research paper. The project will consist of the following steps:</p>
+          <ul>
+            <li><strong>B.1: Detecting corner features in an image (20 pts)</strong></li>
+            <li><strong>B.2: Extracting a Feature Descriptor for each feature point (20 pts)</strong></li>
+            <li><strong>B.3: Matching these feature descriptors between two images (20 pts)</strong></li>
+            <li><strong>B.4: Use a robust method (RANSAC) to compute and apply homographies (40 pts)</strong></li>
+          </ul>
+        </div>
+      </section>
+      
+      <section id="part-b1" class="card">
+        <div class="overline">Part B</div>
+        <h2>Feature Detection: Harris Corners & ANMS</h2>
+        <div class="stack">
+
+          <h3>1. Harris Corner Detection Results</h3>
+          <p>
+            <strong>All Harris corners</strong> detected (over 1500 per image) are shown overlaid
+          </p>
+          <figure>
+            <div class="image-row2">
+              <figure class="card">
+                <div class="img-box">
+                  <img src="media/kitchen_left_harris_corners.jpg" alt="Kitchen Left with Harris Corners" />
+                  <figcaption>Kitchen Left: Harris Corners</figcaption>
+                </div>
+              </figure>
+              <figure class="card">
+                <div class="img-box">
+                  <img src="media/kitchen_middle_harris_corners.jpg" alt="Kitchen Middle with Harris Corners" />
+                  <figcaption>Kitchen Middle: Harris Corners</figcaption>
+                </div>
+              </figure>
+            </div>
+            <figcaption>Harris corner points before ANMS. Clusters are visible.</figcaption>
+          </figure>
+
+          <h3>2. ANMS-filtered Harris Corners</h3>
+          <p>
+            <strong>ANMS</strong> (Adaptive Non-Maximum Suppression) selects the top 500 spatially distributed corners, which avoids clustering and improves feature matching for downstream tasks.
+          </p>
+          <figure>
+            <div class="image-row2">
+              <figure class="card">
+                <div class="img-box">
+                  <img src="media/kitchen_left_anms_corners.jpg" alt="Kitchen Left with ANMS Corners" />
+                  <figcaption>Kitchen Left: ANMS Corners</figcaption>
+                </div>
+              </figure>
+              <figure class="card">
+                <div class="img-box">
+                  <img src="media/kitchen_middle_anms_corners.jpg" alt="Kitchen Middle with ANMS Corners" />
+                  <figcaption>Kitchen Middle: ANMS Corners</figcaption>
+                </div>
+              </figure>
+            </div>
+            <figcaption>Top 500 corners after ANMS: points are more evenly spread, ideal for reliable matching.</figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <section id="part-b2" class="card">
+        <div class="overline">Part B.2</div>
+        <h2>Feature Descriptor Extraction</h2>
+        <div class="stack">
+          Below are five example normalized descriptors for both kitchen images, visualized as grayscale patches:
+
+
+          <figure>
+            <h3>Kitchen Left descriptors</h3>
+            <div class="image-row5">
+              <img src="media/im1_descriptor_0.jpg" alt="Descriptor 0 kitchen_middle" loading="lazy" />
+              <img src="media/im1_descriptor_1.jpg" alt="Descriptor 1 kitchen_middle" loading="lazy" />
+              <img src="media/im1_descriptor_2.jpg" alt="Descriptor 2 kitchen_middle" loading="lazy" />
+              <img src="media/im1_descriptor_3.jpg" alt="Descriptor 3 kitchen_middle" loading="lazy" />
+              <img src="media/im1_descriptor_4.jpg" alt="Descriptor 4 kitchen_middle" loading="lazy" />
+            </div>
+            <figcaption>Example descriptors from kitchen_left</figcaption>
+            </div>
+          </figure>
+        
+          <figure>
+            <h3>Kitchen Middle descriptors</h3>
+            <div class="image-row5">
+              <img src="media/im2_descriptor_0.jpg" alt="Descriptor 0 kitchen_middle" loading="lazy" />
+              <img src="media/im2_descriptor_1.jpg" alt="Descriptor 1 kitchen_middle" loading="lazy" />
+              <img src="media/im2_descriptor_2.jpg" alt="Descriptor 2 kitchen_middle" loading="lazy" />
+              <img src="media/im2_descriptor_3.jpg" alt="Descriptor 3 kitchen_middle" loading="lazy" />
+              <img src="media/im2_descriptor_4.jpg" alt="Descriptor 4 kitchen_middle" loading="lazy" />
+            </div>
+              <figcaption>Example descriptors from kitchen_middle</figcaption>
+            </div>
+          </figure>
+          </div>
+          </div>
+
+        </div>
+      </section>
+
+      <section id="part-b3" class="card">
+        <div class="overline">Part B.3</div>
+        <h2>Feature Matching</h2>
+        <div class="stack">
+          Feature matching was implemented using Lowe's ratio test approach, which compares the distance to the nearest neighbor versus the second nearest neighbor. This helps filter out ambiguous matches where multiple features are similarly close.
+
+          <figure>
+            <h3>Matched Features Between Kitchen Images</h3>
+            <div class="image-row5">
+              <img src="media/match_patches/match_1_ratio_0.592.png" alt="Match 1 - Ratio: 0.592" loading="lazy" />
+              <img src="media/match_patches/match_2_ratio_0.082.png" alt="Match 2 - Ratio: 0.082" loading="lazy" />
+              <img src="media/match_patches/match_3_ratio_0.327.png" alt="Match 3 - Ratio: 0.327" loading="lazy" />
+              <img src="media/match_patches/match_4_ratio_0.152.png" alt="Match 4 - Ratio: 0.152" loading="lazy" />
+              <img src="media/match_patches/match_5_ratio_0.042.png" alt="Match 5 - Ratio: 0.042" loading="lazy" />
+            </div>
+            <figcaption>Top 5 feature matches between kitchen_left and kitchen_middle images, showing the ratio values for each match</figcaption>
+          </figure>
+
+        <!-- INSERT_YOUR_CODE -->
+        <figure>
+          <h3>Matched Points Visualization</h3>
+          <div class="image-row2">
+            <figure class="card">
+              <div class="img-box">
+                <img src="media/kitchen_left_matches.jpg" alt="Matched points on kitchen_left" loading="lazy" />
+              </div>
+              <figcaption>Matched feature points visualized on <strong>kitchen_left</strong></figcaption>
+            </figure>
+            <figure class="card">
+              <div class="img-box">
+                <img src="media/kitchen_middle_matches.jpg" alt="Matched points on kitchen_middle" loading="lazy" />
+              </div>
+              <figcaption>Matched feature points visualized on <strong>kitchen_middle</strong></figcaption>
+            </figure>
+          </div>
+          <figcaption>Feature matches drawn on both images using the matches found by the ratio test.</figcaption>
+        </figure>
+        <p>As one can see the first match with the highest ratio (horizontal handle) is on both images, but the actual features do not match as it is a different handle (even though it is the only horizontal handle in both images).
+          The second match (vertical handle) is on both images, and the features match. This ocasional mismatch is the reason for a RANSAC approach to cross-check the matches.
+        </p>
+        </div>
+      </section>
+
+      <section id="part-b4" class="card">
+        <div class="overline">Part B.4</div>
+        <h2>RANSAC for Robust Homography</h2>
+        <div class="stack">
+        <p>Below, the three scenes are stitched using RANSAC homography. The first scene is the window scene, the second scene is the kitchen scene, and the third scene is the locker scene.
+          For each scene, the manually stitched panorama is also shown for comparison. As one can see, the automatic stitching is much better than the manual stitching.
+        </p>
+        <figure>
+          <h3>Autostiched Image Mosaics Using RANSAC Homography (Window)</h3>
+          <div class="image-row1">
+            <figure class="card">
+              <div class="img-box1">
+                <img src="media/window_blended_image_auto_stiching.jpg" alt="Autostiched window panorama using RANSAC" loading="lazy" />
+              </div>
+              <figcaption><strong>Autostiched window panorama</strong> (with feature extraction, ratio test &amp; RANSAC)</figcaption>
+            </figure>
+          </div>
+          <div class="image-row1">
+            <figure class="card">
+              <div class="img-box1">
+                <img src="media/left_middle_right_blended.jpg" alt="Manually stitched window panorama (Part A)" loading="lazy" />
+              </div>
+              <figcaption><strong>Manual stitched window panorama</strong> (from Part A, manually selected points)</figcaption>
+            </figure>
+          </div>
+        </figure>
+
+        <figure>
+          <h3>Autostiched Image Mosaics Using RANSAC Homography (Kitchen)</h3>
+          <div class="image-row1">
+            <figure class="card">
+              <div class="img-box1">
+                <img src="media/kitchen_blended_image_auto_stiching.jpg" alt="Autostiched kitchen panorama using RANSAC" loading="lazy" />
+              </div>
+              <figcaption><strong>Autostiched kitchen panorama</strong> (with feature extraction, ratio test &amp; RANSAC)</figcaption>
+            </figure>
+          </div>
+          <div class="image-row1">
+            <figure class="card">
+              <div class="img-box1">
+                <img src="media/kitchen_left_middle_right_blended.jpg" alt="Manually stitched kitchen panorama (Part A)" loading="lazy" />
+              </div>
+              <figcaption><strong>Manual stitched kitchen panorama</strong> (from Part A, manually selected points)</figcaption>
+            </figure>
+          </div>
+        </figure>
+        <figure>
+          <h3>Autostiched Image Mosaics Using RANSAC Homography (Locker)</h3>
+          <div class="image-row1">
+            <figure class="card">
+              <div class="img-box1">
+                <img src="media/locker_blended_image_auto_stiching.jpg" alt="Autostiched locker panorama using RANSAC" loading="lazy" />
+              </div>
+              <figcaption><strong>Autostiched locker panorama</strong> (with feature extraction, ratio test &amp; RANSAC)</figcaption>
+            </figure>
+          </div>
+          <div class="image-row1">
+            <figure class="card">
+              <div class="img-box1">
+                <img src="media/locker_left_middle_right_blended.jpg" alt="Manually stitched locker panorama (Part A)" loading="lazy" />
+              </div>
+              <figcaption><strong>Manual stitched locker panorama</strong> (from Part A, manually selected points)</figcaption>
+            </figure>
+          </div>
+        </figure>
+        </div>
+      </section>
+        
       </main>
 
+
+      
     <footer>
       © <span id="year"></span> — Konstantin Wehmeyer
     </footer>
@@ -474,7 +696,11 @@
       { id: 'task-a1', link: 'lnk-task-a1' },
       { id: 'task-a2', link: 'lnk-task-a2' },
       { id: 'task-a3', link: 'lnk-task-a3' },
-      { id: 'task-a4', link: 'lnk-task-a4' }
+      { id: 'task-a4', link: 'lnk-task-a4' },
+      { id: 'part-b', link: 'lnk-part-b' },
+      { id: 'part-b1', link: 'lnk-part-b1' },
+      { id: 'part-b2', link: 'lnk-part-b2' },
+      { id: 'part-b3', link: 'lnk-part-b3' }
     ];
 
     const linkMap = new Map(sections.map(s => [s.id, document.getElementById(s.link)]));

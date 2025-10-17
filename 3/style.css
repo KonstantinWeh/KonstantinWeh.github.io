@@ -99,6 +99,11 @@ p { color: var(--text); }
   overflow:hidden;              /* hide the cropped overflow */
 }
 
+.img-box1 {
+  aspect-ratio: 16 / 9;         /* wider aspect ratio for side-by-side comparisons */
+  max-width: 1200px;             /* limit maximum width */
+  margin: 0 auto;               /* center the image */
+}
 
 .img-box img{
   width:100%;

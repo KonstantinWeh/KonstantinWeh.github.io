@@ -49,7 +49,6 @@ def computeH(im1_pts, im2_pts):
     A[1::2, 6]   = -v * x
     A[1::2, 7]   = -v * y
 
-
     b[0::2] = u
     b[1::2] = v
 
@@ -66,7 +65,7 @@ def computeH(im1_pts, im2_pts):
 
 import numpy as np
 
-def warp_image_nearest_neighbor(im, H):
+def warp_image_nearest_neighbor(im, H, stiching_on_right=False):
     if H.shape != (3, 3):
         raise ValueError("H must be 3x3.")
 
@@ -80,19 +79,18 @@ def warp_image_nearest_neighbor(im, H):
     # normalize
     corners_transformed = corners_transformed[:, :2] / corners_transformed[:, 2:3]
     
-
     x_min = int(np.floor(np.min(corners_transformed[:, 0])))
     y_min = int(np.floor(np.min(corners_transformed[:, 1])))
     x_max = int(np.ceil(np.max(corners_transformed[:, 0])))
     y_max = int(np.ceil(np.max(corners_transformed[:, 1])))
 
-    w_out = x_max - x_min
-    h_out = y_max - y_min
-
-
 #   if stiching on the right side, use this 
-    # w_out = x_max
-    # h_out = y_max
+    if stiching_on_right:
+        w_out = x_max
+        h_out = y_max
+    else:
+        w_out = x_max - x_min
+        h_out = y_max - y_min
     
     
     translation = np.array([[1, 0, -min(x_min, 0)], [0, 1, -min(y_min, 0)], [0, 0, 1]])
@@ -134,7 +132,7 @@ def warp_image_nearest_neighbor(im, H):
 
     return imwarped_nn
 
-def warp_image_bilinear(im, H):
+def warp_image_bilinear(im, H, stiching_on_right=False):
     if H.shape != (3, 3):
         raise ValueError("H must be 3x3.")
 
@@ -153,12 +151,13 @@ def warp_image_bilinear(im, H):
     x_max = int(np.ceil(np.max(corners_transformed[:, 0])))
     y_max = int(np.ceil(np.max(corners_transformed[:, 1])))
 
-    # w_out = x_max - x_min
-    # h_out = y_max - y_min
-#   if stiching on the right side, use this 
-    w_out = x_max
-    h_out = y_max
-    
+
+    if stiching_on_right:
+        w_out = x_max
+        h_out = y_max
+    else:
+        w_out = x_max - x_min
+        h_out = y_max - y_min
 
     translation = np.array([[1, 0, -min(x_min, 0)], [0, 1, -min(y_min, 0)], [0, 0, 1]])
     H_adjusted = translation @ H
@@ -211,18 +210,20 @@ def warp_image_bilinear(im, H):
 
     return imwarped_nn
  
-def display_points_on_image(image, points, output_path):
+def display_points_on_image(image, points, radius=30, output_path=None):
        
         img_with_points = image.copy()
         
         points_int = points.astype(int)
         
-        for point in points_int:
+        for i, point in enumerate(points_int):
             x, y = point[0], point[1]
-            cv2.circle(img_with_points, (x, y), 30, (255, 0, 0), -1)  
+            cv2.circle(img_with_points, (x, y), radius, (255, 0, 0), -1)  
+            cv2.putText(img_with_points, str(i), (x, y), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 2)
         
-        cv2.imwrite(output_path, cv2.cvtColor(img_with_points, cv2.COLOR_RGB2BGR))
-        print(f"Image with points saved to: {output_path}")
+        if output_path is not None:
+            cv2.imwrite(output_path, cv2.cvtColor(img_with_points, cv2.COLOR_RGB2BGR))
+            print(f"Image with points saved to: {output_path}")
         
         return img_with_points
 
@@ -241,7 +242,7 @@ def warp_points(points, H):
     
     return points_transformed
 
-def blend_images(image, ref_image, image_points, ref_image_points):
+def blend_images(image, ref_image, image_points, ref_image_points, stiching_on_right):
 
     h1, w1 = image.shape[:2]
     h2, w2 = ref_image.shape[:2]
@@ -250,21 +251,14 @@ def blend_images(image, ref_image, image_points, ref_image_points):
     corners1 = np.float32([[0, 0], [w1, 0], [w1, h1], [0, h1]])
 
     H = computeH(image_points, ref_image_points) 
-    warped_image = warp_image_bilinear(image, H)
-    plt.imshow(warped_image)
-    plt.show()
-    plt.close()
+    warped_image = warp_image_bilinear(image, H, stiching_on_right)
 
     corners1_transformed = warp_points(corners1, H)
-
-    print("corners1_transformed: ", corners1_transformed)
 
     x_min = int(np.floor(np.min(corners1_transformed[:, 0])))
     y_min = int(np.floor(np.min(corners1_transformed[:, 1])))
     x_max = int(np.ceil(np.max(corners1_transformed[:, 0])))
     y_max = int(np.ceil(np.max(corners1_transformed[:, 1])))
-
-    
 
     # required output size
     output_width = max(x_max, w2) - min(x_min, 0)
@@ -272,7 +266,7 @@ def blend_images(image, ref_image, image_points, ref_image_points):
 
     ref_image_canvas = np.zeros((output_height, output_width, 3), dtype=np.uint8)
     ref_image_canvas[-min(y_min, 0):-min(y_min, 0)+h2, -min(x_min, 0):-min(x_min, 0)+w2] = ref_image
-
+    
     warped_image_canvas = np.zeros((output_height, output_width, 3), dtype=np.uint8)
     
     # Calculate the offset to place the warped image on the canvas
@@ -281,9 +275,12 @@ def blend_images(image, ref_image, image_points, ref_image_points):
     
     # dimensions of the warped image
     warped_h, warped_w = warped_image.shape[:2]    
-    # warped_image_canvas[:warped_h, :warped_w] = warped_image
+
     # use this for stiching on the right side
-    warped_image_canvas[offset_y:offset_y+warped_h, offset_x:offset_x+warped_w] = warped_image
+    if stiching_on_right:
+        warped_image_canvas[offset_y:offset_y+warped_h, offset_x:offset_x+warped_w] = warped_image
+    else:
+        warped_image_canvas[:warped_h, :warped_w] = warped_image
 
     warped_image = warped_image_canvas
 
@@ -292,14 +289,8 @@ def blend_images(image, ref_image, image_points, ref_image_points):
 
     # mask for overlapping regions
     mask = np.where((np.any(warped_image_canvas > 0, axis=2)) & (np.any(ref_image_canvas > 0, axis=2)), 0.5, 1.0)
-
-    plt.imshow(mask)
-    plt.show()
-    plt.close()
     
     mask = np.stack([mask] * 3, axis=2)
-
-    
 
     warped_masked = warped_image_float * mask
     ref_masked = ref_image_float * mask
@@ -321,7 +312,7 @@ if __name__ == "__main__":
     im1_pts = np.loadtxt('im_pts_locker_right.txt')
     im2_pts = np.loadtxt('im_pts_locker_left_middle_blended.txt')
 
-    blended_image = blend_images(ims[0], ims[1], im1_pts, im2_pts)
+    blended_image = blend_images(ims[0], ims[1], im1_pts, im2_pts, stiching_on_right=True)
     plt.imshow(blended_image)
     plt.show()
     plt.close()
