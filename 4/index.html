@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Project 4</title>
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+  <header class="hero">
+    <div class="hero-inner wrap">
+      <a class="brand" href="#top">
+        <div class="container" aria-hidden="true"><img src="../1/UCB_logo.png" alt=""></div>
+        <div class="brand-title">K. Wehmeyer - CS180 - Project 4</div>
+      </a>
+      <nav aria-label="Sections">
+        <a href="#part-0" id="lnk-part-0">Part 0</a>
+        <a href="#part-1" id="lnk-part-1">Part 1</a>
+        <a href="#part-2" id="lnk-part-2">Part 2</a>
+        <a href="#part-26" id="lnk-part-26">Part 2.6</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="wrap">
+    <div class="hero-blurb" id="top">
+      <h1>Neural Radiance Field!</h1>
+    </div>
+
+
+
+      <main class="stack">
+        <!-- NEW: PART 0 / PART 1 / PART 2 / PART 2.6 -->
+        <section id="part-0" class="card">
+          <div class="overline">Part 0</div>
+          <h2>Camera Calibration and 3D Scanning</h2>
+          <div class="stack">
+            <h3>Viser Camera Frustums</h3>
+            <p>I have used my iPhone 15 camera to capture the images of the object. I have used the calibration.py script to get
+               the camera intrinsics and then used the camera_pose.py script to get the camera poses and to visualize the camera frustums.</p>
+            <p>For the first try, I used a bottle. Two screenshots of camera frustums visualization in Viser are shown below.
+              As they were obviously not correct and I could not find any bug in the code, I have decided to use a different object.
+              The camera poses for the football object are shown below. Again, there seems to be a mistake, but even 
+              after extensive debugging, I could not find any bug in the code.
+
+              Lastly, I tried the lafufu data (incl. calibration dataset). However, I could not manage to get the right camera poses (see below).
+              
+            </p>
+            <figure>
+              <div class="image-row2">
+                <figure class="card">
+                  <div class="img-box">
+                    <img src="media/web/viser_1.png" alt="Viser frustums screenshot 1" loading="lazy" />
+                  </div>
+                  <figcaption>Bottle - Frustums View 1</figcaption>
+                </figure>
+                <figure class="card">
+                  <div class="img-box">
+                    <img src="media/web/viser_2.png" alt="Viser frustums screenshot 2" loading="lazy" />
+                  </div>
+                  <figcaption>Bottle - Frustums View 2</figcaption>
+                </figure>
+              </div>
+            </figure>
+              <figure>
+                <div class="image-row2">
+                  <figure class="card">
+                    <div class="img-box">
+                      <img src="media/web/football_render_1.png" alt="Viser frustums screenshot 1" loading="lazy" />
+                    </div>
+                    <figcaption>Football - Frustums View 1</figcaption>
+                  </figure>
+                  <figure class="card">
+                    <div class="img-box">
+                      <img src="media/web/football_render_2.png" alt="Viser frustums screenshot 2" loading="lazy" />
+                    </div>
+                    <figcaption>Football - Frustums View 2</figcaption>
+                  </figure>
+                </div>
+              </figure>
+              <figure>
+                <div class="image-row2">
+                  <figure class="card">
+                    <div class="img-box">
+                      <img src="media/web/lafufu_render_1.png" alt="Viser frustums screenshot 1" loading="lazy" />
+                    </div>
+                    <figcaption>Lafufu - Frustums View 1</figcaption>
+                  </figure>
+                  <figure class="card">
+                    <div class="img-box">
+                      <img src="media/web/lafufu_render_2.png" alt="Viser frustums screenshot 2" loading="lazy" />
+                    </div>
+                    <figcaption>Lafufu - Frustums View 2</figcaption>
+                  </figure>
+                </div>
+              </figure>
+
+          </div>
+        </section>
+
+        <section id="part-1" class="card">
+          <div class="overline">Part 1</div>
+          <h2>Fit a Neural Field to a 2D Image</h2>
+          <div class="stack">
+            <h3>Model Architecture Report</h3>
+            <ul>
+              <li><strong>Layers</strong>: 1 positional encoding module (PosEnc, L=10);<br>
+                4-layer MLP:<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;Linear(<i>pe_dim</i>&rarr;256) &rarr; ReLU,<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;Linear(256&rarr;256) &rarr; ReLU,<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;Linear(256&rarr;256) &rarr; ReLU,<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;Linear(256&rarr;3) &rarr; Sigmoid
+              </li>
+              <li><strong>Width</strong>: 256 neurons per hidden layer</li>
+              <li><strong>Learning Rate</strong>: 1e-2 (Adam optimizer)</li>
+              <li><strong>Other Details</strong>:
+                <ul>
+                  <li>Activation: ReLU (hidden layers), Sigmoid (output layer)</li>
+                  <li>Positional Encoding: L=10 (uses 10 frequency bands as input PE)</li>
+                  <li>pe_dim = 2 input + 2*(2*L) = 42</li>
+                  <li>Output: 3 channels (RGB), normalized [0,1]</li>
+                </ul>
+              </li>
+            </ul>
+
+            <h3>Training Progression</h3>
+            <figure>
+              <div class="image-row5">
+                <figure class="card">
+                  <div class="img-box">
+                    <img src="media/wolf/wolf_reconstruction_00100.png" alt="Wolf reconstruction at 100" loading="lazy" />
+                  </div>
+                  <figcaption>Wolf, 100 iters</figcaption>
+                </figure>
+                <figure class="card">
+                  <div class="img-box">
+                    <img src="media/wolf/wolf_reconstruction_00200.png" alt="Wolf reconstruction at 200" loading="lazy" />
+                  </div>
+                  <figcaption>Wolf, 200 iters</figcaption>
+                </figure>
+                <figure class="card">
+                  <div class="img-box">
+                    <img src="media/wolf/wolf_reconstruction_00500.png" alt="Wolf reconstruction at 500" loading="lazy" />
+                  </div>
+                  <figcaption>Wolf, 500 iters</figcaption>
+                </figure>
+                <figure class="card">
+                  <div class="img-box">
+                    <img src="media/wolf/wolf_reconstruction_01000.png" alt="Wolf reconstruction at 1000" loading="lazy" />
+                  </div>
+                  <figcaption>Wolf, 1000 iters</figcaption>
+                </figure>
+                <figure class="card">
+                  <div class="img-box">
+                    <img src="media/wolf/wolf_reconstruction_01500.png" alt="Wolf reconstruction at 1500" loading="lazy" />
+                  </div>
+                  <figcaption>Wolf, 1500 iters</figcaption>
+                </figure>
+            </figure>
+
+            <h3>Training Progression (Kite)</h3>
+            <figure>
+              <div class="image-row5">
+                <figure class="card">
+                  <div class="img-box">
+                    <img src="media/kite/kite_reconstruction_00100.png" alt="Kite reconstruction at 100" loading="lazy" />
+                  </div>
+                  <figcaption>Kite, 100 iters</figcaption>
+                </figure>
+                <figure class="card">
+                  <div class="img-box">
+                    <img src="media/kite/kite_reconstruction_00200.png" alt="Kite reconstruction at 200" loading="lazy" />
+                  </div>
+                  <figcaption>Kite, 200 iters</figcaption>
+                </figure>
+                <figure class="card">
+                  <div class="img-box">
+                    <img src="media/kite/kite_reconstruction_00500.png" alt="Kite reconstruction at 500" loading="lazy" />
+                  </div>
+                  <figcaption>Kite, 500 iters</figcaption>
+                </figure>
+                <figure class="card">
+                  <div class="img-box">
+                    <img src="media/kite/kite_reconstruction_01000.png" alt="Kite reconstruction at 1000" loading="lazy" />
+                  </div>
+                  <figcaption>Kite, 1000 iters</figcaption>
+                </figure>
+                <figure class="card">
+                  <div class="img-box">
+                    <img src="media/kite/kite_reconstruction_01500.png" alt="Kite reconstruction at 1500" loading="lazy" />
+                  </div>
+                  <figcaption>Kite, 1500 iters</figcaption>
+                </figure>
+              </div>
+                <figure class="card">
+                  <div class="img-box">
+                    <img src="media/kite/psnr_curve_kite.png" alt="PSNR curve for Kite" loading="lazy" />
+                  </div>
+                  <figcaption>PSNR curve for Kite</figcaption>
+                </figure>
+              </div>
+            </figure>
+
+            <h3>Final Results (2×2: PE max freq × width)</h3>
+            <figure>
+              <div class="image-row2">
+                <div class="image-item">
+                  <img src="media/wolf/wolf_reconstruction_width_64_pe_2.png" alt="PE 2, Width 64" loading="lazy" />
+                  <figcaption>PE 2 × Width 64</figcaption>
+                </div>
+                <div class="image-item">
+                  <img src="media/wolf/wolf_reconstruction_width_256_pe_2.png" alt="PE 2, Width 256" loading="lazy" />
+                  <figcaption>PE 2 × Width 256</figcaption>
+                </div>
+              </div>
+              <div class="image-row2">
+                <div class="image-item">
+                  <img src="media/wolf/wolf_reconstruction_width_64_pe_10.png" alt="PE 10, Width 64" loading="lazy" />
+                  <figcaption>PE 10 × Width 64</figcaption>
+                </div>
+                <div class="image-item">
+                  <img src="media/wolf/wolf_reconstruction_width_256_pe_10.png" alt="PE 10, Width 256" loading="lazy" />
+                  <figcaption>PE 10 × Width 256</figcaption>
+                </div>
+              </div>
+              <p>As one can see, the higher PE frequency allows for higher frequencies to show in the final results, and a higher width results in smoother and more detailed results, albeit at the cost of lacking high frequencies with L=2.</p>
+            </figure>
+          </div>
+        </section>
+
+        <section id="part-2" class="card">
+          <div class="overline">Part 2</div>
+          <h2>Fit a Neural Radiance Field from Multi-view Images</h2>
+          <div class="stack">
+            <h3>Implementation Notes</h3>
+            <h3>Part 2.1</h3>
+            <b>Camera to World Coordinate Conversion</b>
+            <p>The camera to world coordinate conversion is implemented in the <code>transform_c2w</code> function in the <code>nerf_multi_view.py</code> file. The function takes a camera to world coordinate matrix and a point in the camera coordinate system and returns the point in the world coordinate system. 
+            It appends a [1] to the point and then multiplies it by the camera to world coordinate matrix using einsum to get the point in the world coordinate system.</p>
+            <b>Pixel to Camera Coordinate Conversion</b>
+            <p>The pixel to camera coordinate conversion is implemented in the <code>pixel_to_camera</code> function in the <code>nerf_multi_view.py</code> file. It multiplies the point by the inverse of the camera intrinsics matrix using einsum to get the u, v point in the camera coordinate system.</p>
+            <b>Pixel to Ray Conversion</b>
+            <p>The pixel to ray conversion is implemented in the <code>pixel_to_ray</code> function in the <code>nerf_multi_view.py</code> file. 
+              It implements the conversion using the given formula.</p>
+            <h3>Part 2.2</h3>
+            <b>Sampling Rays from Images and Sampling Points Along Rays</b>
+            <p>The sampling rays from images is implemented in the <code>sample_random_rays</code> function in the <code>nerf_multi_view.py</code> file. It samples rays from the images using the <code>pixel_to_ray</code> function and returns the origin and direction along with the colors and indices. The origins and 
+              directions are used in the <code>sample_points_along_rays</code> function to generate the points along the rays (64 samples per ray starting from 2.0 to 6.0 in the near and far plane).</p>
+            <h3>Part 2.3</h3>
+            <b>RaysData Class</b>
+            <p>The <code>RaysData</code> class is implemented in the <code>nerf_multi_view.py</code> file. It contains the images, camera intrinsics matrix and camera to world coordinate matrices. It also contains the function to sample rays from the images.</p>
+            <h3>Part 2.4</h3>
+            <b>Neural Field Training</b>
+            <p>The neural field training is implemented in the <code>train_nerf</code> function in the <code>nerf_neural_field_3d.py</code> file. It trains the neural field that is provided in the task description using the data sampled by the <code>RaysData</code> class.
+            It can save and load checkpoints to resume training.</p>
+            <h3>Part 2.5</h3>
+            <b>Volume Rendering</b>
+            <p>
+              The volume rendering step is implemented in the <code>volrend</code> function in <code>volume_rendering.py</code>. 
+              This function computes opacities and transmittance along sampled points on rays. It combines them with the predicted colors to calculate the final rendered color using the provided formula.
+            </p>
+
+
+            <h3>Rays and Samples Visualization</h3>
+            <figure>
+              <div class="img-box-2" style="display: flex; gap: 16px; justify-content: center;">
+                <div style="flex: 1; max-width: 260px;">
+                  <img src="media/lego/frustrums_1.png" alt="Up to 100 rays with camera frustums and samples (View 1)" loading="lazy" style="width: 100%; height: auto; display: block;" />
+                  <figcaption style="font-size: 14px;">Rays and samples with cameras (View 1)</figcaption>
+                </div>
+                <div style="flex: 1; max-width: 260px;">
+                  <img src="media/lego/frustrums_2.png" alt="Up to 100 rays with camera frustums and samples (View 2)" loading="lazy" style="width: 100%; height: auto; display: block;" />
+                  <figcaption style="font-size: 14px;">Rays and samples with cameras (View 2)</figcaption>
+                </div>
+              </div>
+            </figure>
+
+            <h3>Training Progression (Predicted Images)</h3>
+            <div class="image-row5">
+              <figure class="card">
+                <div class="img-box">
+                  <img src="media/lego/val_iter_100.png" alt="Predicted image at iteration 100" loading="lazy" />
+                </div>
+                <figcaption>Iter 100</figcaption>
+              </figure>
+              <figure class="card">
+                <div class="img-box">
+                  <img src="media/lego/val_iter_500.png" alt="Predicted image at iteration 500" loading="lazy" />
+                </div>
+                <figcaption>Iter 500</figcaption>
+              </figure>
+              <figure class="card">
+                <div class="img-box">
+                  <img src="media/lego/val_iter_1000.png" alt="Predicted image at iteration 2000" loading="lazy" />
+                </div>
+                <figcaption>Iter 1000</figcaption>
+              </figure>
+              <figure class="card">
+                <div class="img-box">
+                  <img src="media/lego/val_iter_1500.png" alt="Predicted image at iteration 1500" loading="lazy" />
+                </div>
+                <figcaption>Iter 1500</figcaption>
+              </figure>
+              <figure class="card">
+                <div class="img-box">
+                  <img src="media/lego/val_iter_2000.png" alt="Predicted image at iteration 2000" loading="lazy" />
+                </div>
+                <figcaption>Iter 2000</figcaption>
+              </figure>
+            </div>
+            <div class="image-row5">
+              <figure class="card">
+                <div class="img-box">
+                  <img src="media/lego/val_iter_2500.png" alt="Predicted image at iteration 100" loading="lazy" />
+                </div>
+                <figcaption>Iter 2500</figcaption>
+              </figure>
+              <figure class="card">
+                <div class="img-box">
+                  <img src="media/lego/val_iter_5000.png" alt="Predicted image at iteration 500" loading="lazy" />
+                </div>
+                <figcaption>Iter 5000</figcaption>
+              </figure>
+              <figure class="card">
+                <div class="img-box">
+                  <img src="media/lego/val_iter_10000.png" alt="Predicted image at iteration 2000" loading="lazy" />
+                </div>
+                <figcaption>Iter 10000</figcaption>
+              </figure>
+              <figure class="card">
+                <div class="img-box">
+                  <img src="media/lego/val_iter_15000.png" alt="Predicted image at iteration 7500" loading="lazy" />
+                </div>
+                <figcaption>Iter 15000</figcaption>
+              </figure>
+              <figure class="card">
+                <div class="img-box">
+                  <img src="media/lego/val_iter_20000.png" alt="Predicted image at iteration 20000" loading="lazy" />
+                </div>
+                <figcaption>Iter 20000</figcaption>
+              </figure>
+            </div>
+
+            <h3>PSNR on Validation Set</h3>
+            <figure style="max-width:800px; margin:0 auto">
+              <div class="img-box">
+                <img src="media/lego/psnr_curve_lego.jpg" alt="Validation PSNR curve" loading="lazy" style="max-width:100%; height:auto;" />
+                <figcaption style="font-size:0.95em;">PSNR vs. iterations (validation)</figcaption>
+              </div>
+            </figure>
+
+            <h3>Spherical Rendering Video (Lego)</h3>
+            <figure style="display: flex; flex-direction: column; align-items: center;">
+              <video controls width="480" height="270" preload="metadata" style="max-width:100%; display:block; margin:0 auto;">
+                <source src="media/lego/lego_spherical_20_000.mp4" type="video/mp4" />
+              </video>
+              <figcaption style="text-align:center;">Spherical render</figcaption>
+            </figure>
+          </div>
+        </section>
+
+        <section id="part-26" class="card">
+          <div class="overline">Part 2.6</div>
+          <h2>Training with Your Own Data</h2>
+          
+          <p>I tried using the camera poses generated in Part 0 for the bottle, 
+            football and lafufu data. However, I could not manage to train 
+            meaningful results on any of the objects and the resulting images stayed gray. 
+            Due to time constraints, I have not been able to debug the issue and I have not been able to train the neural field on any of the objects.
+          </p>
+        </section>
+        
+
+        
+
+        
+
+        
+
+        
+
+
+      
+      
+      
+
+      
+
+      
+
+      
+        
+      </main>
+
+
+      
+    <footer>
+      © <span id="year"></span> — Konstantin Wehmeyer
+    </footer>
+  </div>
+
+  <script>
+    // Active link highlighting based on scroll position
+    const sections = [
+      { id: 'part-0', link: 'lnk-part-0' },
+      { id: 'part-1', link: 'lnk-part-1' },
+      { id: 'part-2', link: 'lnk-part-2' },
+      { id: 'part-26', link: 'lnk-part-26' }
+    ];
+
+    const linkMap = new Map(sections.map(s => [s.id, document.getElementById(s.link)]));
+
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        const l = linkMap.get(entry.target.id);
+        if (!l) return;
+        if (entry.isIntersecting) {
+          // remove active
+          linkMap.forEach(a => a.classList.remove('active'));
+          l.classList.add('active');
+        }
+      })
+    }, { rootMargin: '-40% 0px -55% 0px', threshold: 0.02 });
+
+    sections.forEach(s => {
+      const el = document.getElementById(s.id);
+      if (el) io.observe(el);
+    });
+
+    // Year in footer
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
