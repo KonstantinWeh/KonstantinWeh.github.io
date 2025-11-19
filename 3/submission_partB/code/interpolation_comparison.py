@@ -6,7 +6,7 @@ from CS180_Project3_1 import display_points_on_image
 
 
 
-if __name__ == "__main__":
+ if __name__ == "__main__":
 
    images = ['left', 'middle_left', 'middle_right', 'right']
    ims = []

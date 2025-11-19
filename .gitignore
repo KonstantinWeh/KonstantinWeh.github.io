@@ -1,0 +1,101 @@
+# Compiled source #
+###################
+*.com
+*.class
+*.dll
+*.exe
+*.o
+*.so
+*.pyc
+*.pyo
+*.pyd
+*.log
+
+# Packages #
+############
+*.7z
+*.dmg
+*.gz
+*.iso
+*.jar
+*.rar
+*.tar
+*.zip
+*.tgz
+*.xz
+
+# Installer logs #
+##################
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / coverage reports #
+################################
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+
+# Environments #
+################
+.env
+.env.*
+.venv
+venv/
+ENV/
+env/
+env.bak/
+venv.bak/
+myenv/
+.myenv/
+
+4
+
+# Python specific #
+###################
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Jupyter Notebook checkpoints #
+###############################
+.ipynb_checkpoints
+
+# Data & models #
+#################
+*.sqlite3
+*.db
+*.h5
+*.ckpt
+
+# IDEs and editors #
+####################
+.vscode/
+.idea/
+*.sublime-workspace
+*.sublime-project
+
+# OS generated files #
+######################
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Custom ignores #
+##################
+node_modules/
+dist/
+build/
+coverage/
+output/
+out/
+log/
+tmp/
+temp/
