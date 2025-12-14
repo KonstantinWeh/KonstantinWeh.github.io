@@ -1,0 +1,1237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Project 5</title>
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+  <header class="hero">
+    <div class="hero-inner wrap">
+      <a class="brand" href="#top">
+        <div class="container" aria-hidden="true"><img src="../1/UCB_logo.png" alt=""></div>
+        <div class="brand-title">K. Wehmeyer - CS180 - Project 5 (A and B)</div>
+      </a>
+      <nav aria-label="Sections">
+        <a href="#part-0" id="lnk-part-0">Part 0</a>
+        <a href="#part-1" id="lnk-part-1">Part 1</a>
+        <a href="#part-2" id="lnk-part-2">Part B</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="wrap">
+    <div class="hero-blurb" id="top">
+      <h1>Diffusion Models!</h1>
+    </div>
+
+
+
+      <main class="stack">
+        <!-- PART 0: Setup -->
+        <section id="part-0" class="card">
+          <div class="overline">Part 0</div>
+          <h2>Part 0: Setup</h2>
+          <div class="stack">
+            <h3>Text Prompts and Generated Images</h3>
+            <p>I have generated prompt embeddings for several text prompts and selected 3 of them to generate images using the DeepFloyd IF diffusion model. The random seed used throughout all experiments is: <strong>13</strong>.</p>
+            
+            <h4>Prompt 1: "a plane taking off for Christmas holidays"</h4>
+            <p>The image correctly displays a plane taking off for Christmas holidays. The model has difficulty in generating a clear and detailed image of the plane, but it is able to generate a general idea of what the plane looks like.
+              With 50 iteration steps, the image is more detailed and the plane is more visible, but still not realistic.
+            </p>
+            <figure>
+              <div class="image-row3">
+                <figure class="card">
+                  <div class="img-box">
+                    <img src="generated_images/prompt_a_plane_taking_off_for_Christmas_holidays_steps_10.png" alt="Plane taking off - 10 steps" loading="lazy" />
+                  </div>
+                  <figcaption>10 inference steps</figcaption>
+                </figure>
+                <figure class="card">
+                  <div class="img-box">
+                    <img src="generated_images/prompt_a_plane_taking_off_for_Christmas_holidays_steps_20.png" alt="Plane taking off - 20 steps" loading="lazy" />
+                  </div>
+                  <figcaption>20 inference steps</figcaption>
+                </figure>
+                <figure class="card">
+                  <div class="img-box">
+                    <img src="generated_images/prompt_a_plane_taking_off_for_Christmas_holidays_steps_50.png" alt="Plane taking off - 50 steps" loading="lazy" />
+                  </div>
+                  <figcaption>50 inference steps</figcaption>
+                </figure>
+              </div>
+            </figure>
+
+            <h4>Prompt 2: "a snowy Golden Gate Bridge in San Francisco"</h4>
+            <p>The image correctly displays a Golden Gate Bridge in San Francisco. The type of image stays the same for increasing the number of inference steps, the only difference is the amount of detail in the images.
+              The model has difficulty generating the snow on the Bridge, but it looks like a winter night scene. This could be because there aren't many snow images of the Golden Gate Bridge in the training data.
+            <figure>
+              <div class="image-row3">
+                <figure class="card">
+                  <div class="img-box">
+                    <img src="generated_images/prompt_a_snowy_Golden_Gate_Bridge_in_San_Francisco_steps_10.png" alt="Snowy Golden Gate Bridge - 10 steps" loading="lazy" />
+                  </div>
+                  <figcaption>10 inference steps</figcaption>
+                </figure>
+                <figure class="card">
+                  <div class="img-box">
+                    <img src="generated_images/prompt_a_snowy_Golden_Gate_Bridge_in_San_Francisco_steps_20.png" alt="Snowy Golden Gate Bridge - 20 steps" loading="lazy" />
+                  </div>
+                  <figcaption>20 inference steps</figcaption>
+                </figure>
+                <figure class="card">
+                  <div class="img-box">
+                    <img src="generated_images/prompt_a_snowy_Golden_Gate_Bridge_in_San_Francisco_steps_50.png" alt="Snowy Golden Gate Bridge - 50 steps" loading="lazy" />
+                  </div>
+                  <figcaption>50 inference steps</figcaption>
+                </figure>
+              </div>
+            </figure>
+
+            <h4>Prompt 3: "UC Berkeley's campanile tower next to the smaller"</h4>
+            <p>Interestingly, the first image with the low number of inference steps displays a tower
+              similar to the hoover tower, but not the campanile. It also includes the pine trees that are typical for Stanford. 
+              For 20 inference steps, the image contains a tower that looks like the campanile, but that tower is smaller and the other tower does not look like the hoover tower.
+              For 50 inference steps, the image contains two towers that don't look like the hoover tower or the campanile, and they are similar to each other (in height and appearance).
+            </p>
+            <figure>
+              <div class="image-row3">
+                <figure class="card">
+                  <div class="img-box">
+                    <img src="generated_images/prompt_UC_Berkeley_s_campanile_tower_next_to_the_smaller_steps_10.png" alt="UC Berkeley campanile - 10 steps" loading="lazy" />
+                  </div>
+                  <figcaption>10 inference steps</figcaption>
+                </figure>
+                <figure class="card">
+                  <div class="img-box">
+                    <img src="generated_images/prompt_UC_Berkeley_s_campanile_tower_next_to_the_smaller_steps_20.png" alt="UC Berkeley campanile - 20 steps" loading="lazy" />
+                  </div>
+                  <figcaption>20 inference steps</figcaption>
+                </figure>
+                <figure class="card">
+                  <div class="img-box">
+                    <img src="generated_images/prompt_UC_Berkeley_s_campanile_tower_next_to_the_smaller_steps_50.png" alt="UC Berkeley campanile - 50 steps" loading="lazy" />
+                  </div>
+                  <figcaption>50 inference steps</figcaption>
+                </figure>
+              </div>
+            </figure>
+
+            </div>
+        </section>
+
+        <section id="part-1" class="card">
+          <div class="overline">Part 1</div>
+          <h2>Sampling Loops</h2>
+          <div class="stack">
+            
+            <h3>Part 1.1: Implementing the Forward Process</h3>
+            <p>The forward process takes a clean image and adds noise to it according to the diffusion schedule. The function <code>forward(im, t)</code> implements this by sampling from a Gaussian distribution with mean and variance determined by the noise coefficients.</p>
+            <p>Below are the results of applying the forward process to the Berkeley Campanile test image at different noise levels (timesteps 250, 500, and 750).</p>
+            <figure>
+              <div class="image-row4">
+                <figure class="card">
+                  <div class="img-box">
+                    <img src="campanile.jpg" alt="Original Berkeley Campanile" loading="lazy" />
+                  </div>
+                  <figcaption>Original Campanile</figcaption>
+                </figure>
+                <figure class="card">
+                  <div class="img-box">
+                    <img src="noisy_campanile/noisy_t_250.png" alt="Noisy Campanile at t=250" loading="lazy" />
+                  </div>
+                  <figcaption>Noisy Campanile at t=250</figcaption>
+                </figure>
+                <figure class="card">
+                  <div class="img-box">
+                    <img src="noisy_campanile/noisy_t_500.png" alt="Noisy Campanile at t=500" loading="lazy" />
+                  </div>
+                  <figcaption>Noisy Campanile at t=500</figcaption>
+                </figure>
+                <figure class="card">
+                  <div class="img-box">
+                    <img src="noisy_campanile/noisy_t_750.png" alt="Noisy Campanile at t=750" loading="lazy" />
+                  </div>
+                  <figcaption>Noisy Campanile at t=750</figcaption>
+                </figure>
+              </div>
+            </figure>
+
+            <h3>Part 1.2: Classical Denoising</h3>
+            <p>We attempt to denoise the noisy images using Gaussian blur filtering. This classical approach struggles to recover the original image quality, especially at higher noise levels.</p>
+            <figure>
+              <div class="image-row2">
+                <figure class="card">
+                  <div class="img-box">
+                    <img src="noisy_campanile/noisy_t_250.png" alt="Noisy Campanile at t=250" loading="lazy" />
+                  </div>
+                  <figcaption>Noisy Campanile at t=250</figcaption>
+                </figure>
+                <figure class="card">
+                  <div class="img-box">
+                    <img src="gaussian_denoised_images/gaussian_denoised_t_250.png" alt="Gaussian Blur Denoising at t=250" loading="lazy" />
+                  </div>
+                  <figcaption>Gaussian Blur Denoising at t=250</figcaption>
+                </figure>
+              </div>
+            </figure>
+            <figure>
+              <div class="image-row2">
+                <figure class="card">
+                  <div class="img-box">
+                    <img src="noisy_campanile/noisy_t_500.png" alt="Noisy Campanile at t=500" loading="lazy" />
+                  </div>
+                  <figcaption>Noisy Campanile at t=500</figcaption>
+                </figure>
+                <figure class="card">
+                  <div class="img-box">
+                    <img src="gaussian_denoised_images/gaussian_denoised_t_500.png" alt="Gaussian Blur Denoising at t=500" loading="lazy" />
+                  </div>
+                  <figcaption>Gaussian Blur Denoising at t=500</figcaption>
+                </figure>
+              </div>
+            </figure>
+            <figure>
+              <div class="image-row2">
+                <figure class="card">
+                  <div class="img-box">
+                    <img src="noisy_campanile/noisy_t_750.png" alt="Noisy Campanile at t=750" loading="lazy" />
+                  </div>
+                  <figcaption>Noisy Campanile at t=750</figcaption>
+                </figure>
+                <figure class="card">
+                  <div class="img-box">
+                    <img src="gaussian_denoised_images/gaussian_denoised_t_750.png" alt="Gaussian Blur Denoising at t=750" loading="lazy" />
+                  </div>
+                  <figcaption>Gaussian Blur Denoising at t=750</figcaption>
+                </figure>
+              </div>
+            </figure>
+
+            <h3>Part 1.3: One-Step Denoising</h3>
+            <p>Using the pretrained UNet denoiser, we can estimate the noise in a noisy image and remove it to recover an estimate of the original image. The UNet is conditioned on the timestep and 
+              text prompt embeddings <strong>"a high quality photo"</strong>.</p>
+            <figure>
+              <div class="image-row2">
+                <figure class="card">
+                  <div class="img-box">
+                    <img src="noisy_campanile/noisy_t_250.png" alt="Noisy Campanile at t=250" loading="lazy" />
+                  </div>
+                  <figcaption>Noisy Campanile at t=250</figcaption>
+                </figure>
+                <figure class="card">
+                  <div class="img-box">
+                    <img src="unet_denoised_images/unet_denoised_t_250.png" alt="One-Step Denoised Campanile at t=250" loading="lazy" />
+                  </div>
+                  <figcaption>One-Step Denoised Campanile at t=250</figcaption>
+                </figure>
+              </div>
+            </figure>
+            <figure>
+              <div class="image-row2">
+                <figure class="card">
+                  <div class="img-box">
+                    <img src="noisy_campanile/noisy_t_500.png" alt="Noisy Campanile at t=500" loading="lazy" />
+                  </div>
+                  <figcaption>Noisy Campanile at t=500</figcaption>
+                </figure>
+                <figure class="card">
+                  <div class="img-box">
+                    <img src="unet_denoised_images/unet_denoised_t_500.png" alt="One-Step Denoised Campanile at t=500" loading="lazy" />
+                  </div>
+                  <figcaption>One-Step Denoised Campanile at t=500</figcaption>
+                </figure>
+              </div>
+            </figure>
+            <figure>
+              <div class="image-row2">
+                <figure class="card">
+                  <div class="img-box">
+                    <img src="noisy_campanile/noisy_t_750.png" alt="Noisy Campanile at t=750" loading="lazy" />
+                  </div>
+                  <figcaption>Noisy Campanile at t=750</figcaption>
+                </figure>
+                <figure class="card">
+                  <div class="img-box">
+                    <img src="unet_denoised_images/unet_denoised_t_750.png" alt="One-Step Denoised Campanile at t=750" loading="lazy" />
+                  </div>
+                  <figcaption>One-Step Denoised Campanile at t=750</figcaption>
+                </figure>
+              </div>
+            </figure>
+
+            <h3>Part 1.4: Iterative Denoising</h3>
+            <p>Instead of denoising in a single step, we can iteratively denoise the image by 
+              applying the denoising process multiple times, gradually reducing the noise level. This produces more realistic results than one-step denoising.
+              <br>
+              <br>
+              However, I did not manage to get a result that is similar to the original image. I have included two of my best attempts at iterative denoising below.
+              The one-step denoised image has lower details but is more similar to the original image. The iterative denoised image has more details but is less similar to the original image.
+            </p>
+            <p>Starting from a noisy image at timestep 690 (i_start = 10), the denoising progression every 5th step:</p>
+            <figure>
+              <div class="image-row6">
+                <figure class="card">
+                  <div class="img-box">
+                    <img src="iterative_denoising_steps/denoising_step_00_t_690.png" alt="Denoising step 0 at t=690" loading="lazy" />
+                  </div>
+                  <figcaption>Step 0, t=690</figcaption>
+                </figure>
+                <figure class="card">
+                  <div class="img-box">
+                    <img src="iterative_denoising_steps/denoising_step_05_t_540.png" alt="Denoising step 5 at t=540" loading="lazy" />
+                  </div>
+                  <figcaption>Step 5, t=540</figcaption>
+                </figure>
+                <figure class="card">
+                  <div class="img-box">
+                    <img src="iterative_denoising_steps/denoising_step_10_t_390.png" alt="Denoising step 10 at t=390" loading="lazy" />
+                  </div>
+                  <figcaption>Step 10, t=390</figcaption>
+                </figure>
+                <figure class="card">
+                  <div class="img-box">
+                    <img src="iterative_denoising_steps/denoising_step_15_t_240.png" alt="Denoising step 15 at t=240" loading="lazy" />
+                  </div>
+                  <figcaption>Step 15, t=240</figcaption>
+                </figure>
+                <figure class="card">
+                  <div class="img-box">
+                    <img src="iterative_denoising_steps/denoising_step_20_t_90.png" alt="Denoising step 20 at t=90" loading="lazy" />
+                  </div>
+                  <figcaption>Step 20, t=90</figcaption>
+                </figure>
+                <figure class="card">
+                  <div class="img-box">
+                    <img src="iterative_denoising_steps/final/final_iterative_denoised_image.png" alt="Final iteratively denoised image" loading="lazy" />
+                  </div>
+                  <figcaption>Iteratively Denoised Campanile</figcaption>
+                </figure>
+              </div>
+            </figure>
+            <figure>
+              <div class="image-row6">
+                <figure class="card">
+                  <div class="img-box">
+                    <img src="iterative_denoising_steps_1/denoising_step_00_t_690.png" alt="Denoising step 0 at t=690" loading="lazy" />
+                  </div>
+                  <figcaption>Step 0, t=690</figcaption>
+                </figure>
+                <figure class="card">
+                  <div class="img-box">
+                    <img src="iterative_denoising_steps_1/denoising_step_01_t_540.png" alt="Denoising step 5 at t=540" loading="lazy" />
+                  </div>
+                  <figcaption>Step 5, t=540</figcaption>
+                </figure>
+                <figure class="card">
+                  <div class="img-box">
+                    <img src="iterative_denoising_steps_1/denoising_step_02_t_390.png" alt="Denoising step 10 at t=390" loading="lazy" />
+                  </div>
+                  <figcaption>Step 10, t=390</figcaption>
+                </figure>
+                <figure class="card">
+                  <div class="img-box">
+                    <img src="iterative_denoising_steps_1/denoising_step_03_t_240.png" alt="Denoising step 15 at t=240" loading="lazy" />
+                  </div>
+                  <figcaption>Step 15, t=240</figcaption>
+                </figure>
+                <figure class="card">
+                  <div class="img-box">
+                    <img src="iterative_denoising_steps_1/denoising_step_04_t_90.png" alt="Denoising step 20 at t=90" loading="lazy" />
+                  </div>
+                  <figcaption>Step 20, t=90</figcaption>
+                </figure>
+                <figure class="card">
+                  <div class="img-box">
+                    <img src="iterative_denoising_steps_1/final/final_iterative_denoised_image.png" alt="Final iteratively denoised image" loading="lazy" />
+                  </div>
+                  <figcaption>Iteratively Denoised Campanile</figcaption>
+                </figure>
+              </div>
+            </figure>
+            <p>Comparison of different denoising methods:</p>
+            <figure>
+              <div class="image-row5">
+                <figure class="card">
+                  <div class="img-box">
+                    <img src="campanile.jpg" alt="Original Campanile" loading="lazy" />
+                  </div>
+                  <figcaption>Original Campanile</figcaption>
+                </figure>
+                <figure class="card">
+                  <div class="img-box">
+                    <img src="iterative_denoising_steps/final/final_iterative_denoised_image.png" alt="Iteratively Denoised Campanile" loading="lazy" />
+                  </div>
+                  <figcaption>Iteratively Denoised Campanile (version 1)</figcaption>
+                </figure>
+                <figure class="card">
+                  <div class="img-box">
+                    <img src="iterative_denoising_steps_1/final/final_iterative_denoised_image.png" alt="Iteratively Denoised Campanile" loading="lazy" />
+                  </div>
+                  <figcaption>Iteratively Denoised Campanile (version 2)</figcaption>
+                </figure>
+                <figure class="card">
+                  <div class="img-box">
+                    <img src="unet_denoised_images/unet_denoised_t_500.png" alt="One-Step Denoised Campanile" loading="lazy" />
+                  </div>
+                  <figcaption>One-Step Denoised Campanile</figcaption>
+                </figure>
+
+                <figure class="card">
+                  <div class="img-box">
+                    <img src="gaussian_denoised_images/gaussian_denoised_t_500.png" alt="Gaussian Blurred Campanile" loading="lazy" />
+                  </div>
+                  <figcaption>Gaussian Blurred Campanile</figcaption>
+                </figure>
+              </div>
+            </figure>
+
+            <h3>Part 1.5: Diffusion Model Sampling</h3>
+            <p>We can generate images from scratch by starting from pure random noise and iteratively denoising it. This demonstrates the generative capability of diffusion models. Below are 5 samples generated from random noise using the prompt "a high quality photo".</p>
+            <figure>
+              <div class="image-row5">
+                <figure class="card">
+                  <div class="img-box">
+                    <img src="generated_images_from_scratch/generated_sample_1.png" alt="Generated sample 1" loading="lazy" />
+                  </div>
+                  <figcaption>Sample 1</figcaption>
+                </figure>
+                <figure class="card">
+                  <div class="img-box">
+                    <img src="generated_images_from_scratch/generated_sample_2.png" alt="Generated sample 2" loading="lazy" />
+                  </div>
+                  <figcaption>Sample 2</figcaption>
+                </figure>
+                <figure class="card">
+                  <div class="img-box">
+                    <img src="generated_images_from_scratch/generated_sample_3.png" alt="Generated sample 3" loading="lazy" />
+                  </div>
+                  <figcaption>Sample 3</figcaption>
+                </figure>
+                <figure class="card">
+                  <div class="img-box">
+                    <img src="generated_images_from_scratch/generated_sample_4.png" alt="Generated sample 4" loading="lazy" />
+                  </div>
+                  <figcaption>Sample 4</figcaption>
+                </figure>
+                <figure class="card">
+                  <div class="img-box">
+                    <img src="generated_images_from_scratch/generated_sample_5.png" alt="Generated sample 5" loading="lazy" />
+                  </div>
+                  <figcaption>Sample 5</figcaption>
+                </figure>
+              </div>
+            </figure>
+
+            <h3>Part 1.6: Classifier-Free Guidance</h3>
+            <p>Classifier-Free Guidance (CFG) improves the quality and prompt alignment of generated images by combining conditional and unconditional predictions. The guidance scale controls how strongly the model follows the prompt. Below are 5 samples generated using CFG with a guidance scale of 7.5 and the prompt "a high quality photo".</p>
+            <figure>
+              <div class="image-row5">
+                <figure class="card">
+                  <div class="img-box">
+                    <img src="generated_images_cfg/generated_cfg_sample_1.png" alt="CFG generated sample 1" loading="lazy" />
+                  </div>
+                  <figcaption>CFG Sample 1</figcaption>
+                </figure>
+                <figure class="card">
+                  <div class="img-box">
+                    <img src="generated_images_cfg/generated_cfg_sample_2.png" alt="CFG generated sample 2" loading="lazy" />
+                  </div>
+                  <figcaption>CFG Sample 2</figcaption>
+                </figure>
+                <figure class="card">
+                  <div class="img-box">
+                    <img src="generated_images_cfg/generated_cfg_sample_3.png" alt="CFG generated sample 3" loading="lazy" />
+                  </div>
+                  <figcaption>CFG Sample 3</figcaption>
+                </figure>
+                <figure class="card">
+                  <div class="img-box">
+                    <img src="generated_images_cfg/generated_cfg_sample_4.png" alt="CFG generated sample 4" loading="lazy" />
+                  </div>
+                  <figcaption>CFG Sample 4</figcaption>
+                </figure>
+                <figure class="card">
+                  <div class="img-box">
+                    <img src="generated_images_cfg/generated_cfg_sample_5.png" alt="CFG generated sample 5" loading="lazy" />
+                  </div>
+                  <figcaption>CFG Sample 5</figcaption>
+                </figure>
+              </div>
+            </figure>
+
+            <h3>Part 1.7: Image-to-image Translation</h3>
+            
+            <p>SDEdit (Score-based Diffusion Editing) allows us to edit images by adding noise and then denoising them. The amount of noise added determines how much the image changes. Below are SDEdit results on the Campanile image at different noise levels (timesteps).</p>
+            <figure>
+              <div class="image-row6">
+                <figure class="card">
+                  <div class="img-box">
+                    <img src="sdedit_campanile_results/sdedit_campanile_t_960_step_1.png" alt="SDEdit Campanile t=960" loading="lazy" />
+                  </div>
+                  <figcaption>t=960 (step 1)</figcaption>
+                </figure>
+                <figure class="card">
+                  <div class="img-box">
+                    <img src="sdedit_campanile_results/sdedit_campanile_t_900_step_3.png" alt="SDEdit Campanile t=900" loading="lazy" />
+                  </div>
+                  <figcaption>t=900 (step 3)</figcaption>
+                </figure>
+                <figure class="card">
+                  <div class="img-box">
+                    <img src="sdedit_campanile_results/sdedit_campanile_t_840_step_5.png" alt="SDEdit Campanile t=840" loading="lazy" />
+                  </div>
+                  <figcaption>t=840 (step 5)</figcaption>
+                </figure>
+                <figure class="card">
+                  <div class="img-box">
+                    <img src="sdedit_campanile_results/sdedit_campanile_t_780_step_7.png" alt="SDEdit Campanile t=780" loading="lazy" />
+                  </div>
+                  <figcaption>t=780 (step 7)</figcaption>
+                </figure>
+                <figure class="card">
+                  <div class="img-box">
+                    <img src="sdedit_campanile_results/sdedit_campanile_t_690_step_10.png" alt="SDEdit Campanile t=690" loading="lazy" />
+                  </div>
+                  <figcaption>t=690 (step 10)</figcaption>
+                </figure>
+                <figure class="card">
+                  <div class="img-box">
+                    <img src="sdedit_campanile_results/sdedit_campanile_t_390_step_20.png" alt="SDEdit Campanile t=390" loading="lazy" />
+                  </div>
+                  <figcaption>t=390 (step 20)</figcaption>
+                </figure>
+              </div>
+            </figure>
+
+            <h4>Part 1.7.1: SDEdit on Sketches</h4>
+            <p>SDEdit can transform sketches into (realistic) images. Below are results for different input sketches (car sketch, football, and Golden Gate Bridge) 
+              at various noise levels. The car sketch is from the internet and the other ones are my own sketches drawn with pain(t) using the touch pad.</p>
+              <br>
+              <br>
+              The images are only reconstructed at very low noise levels (t=390).
+              The
+            <h5>Car Sketch</h5>
+            <figure>
+              <p>Web Image: Original Car Sketch</p>
+              <div class="image-row6">
+                <figure class="card">
+                  <img src="porsche_sketch.png" alt="Car Sketch" loading="lazy" />
+                </figure>
+              </div>
+            </figure>
+            <figure>
+              <div class="image-row6">
+                <figure class="card">
+                  <div class="img-box">
+                    <img src="s_edit_outputs/s_edit_porsche_sketch_t_960.png" alt="Porsche SDEdit t=960" loading="lazy" />
+                  </div>
+                  <figcaption>t=960</figcaption>
+                </figure>
+                <figure class="card">
+                  <div class="img-box">
+                    <img src="s_edit_outputs/s_edit_porsche_sketch_t_900.png" alt="Porsche SDEdit t=900" loading="lazy" />
+                  </div>
+                  <figcaption>t=900</figcaption>
+                </figure>
+                <figure class="card">
+                  <div class="img-box">
+                    <img src="s_edit_outputs/s_edit_porsche_sketch_t_840.png" alt="Porsche SDEdit t=840" loading="lazy" />
+                  </div>
+                  <figcaption>t=840</figcaption>
+                </figure>
+                <figure class="card">
+                  <div class="img-box">
+                    <img src="s_edit_outputs/s_edit_porsche_sketch_t_780.png" alt="Porsche SDEdit t=780" loading="lazy" />
+                  </div>
+                  <figcaption>t=780</figcaption>
+                </figure>
+                <figure class="card">
+                  <div class="img-box">
+                    <img src="s_edit_outputs/s_edit_porsche_sketch_t_690.png" alt="Porsche SDEdit t=690" loading="lazy" />
+                  </div>
+                  <figcaption>t=690</figcaption>
+                </figure>
+                <figure class="card">
+                  <div class="img-box">
+                    <img src="s_edit_outputs/s_edit_porsche_sketch_t_390.png" alt="Porsche SDEdit t=390" loading="lazy" />
+                  </div>
+                  <figcaption>t=390</figcaption>
+                </figure>
+              </div>
+            </figure>
+
+            <h5>Football Sketch</h5>
+            <figure>
+              <p>Hand-Drawn: Original Football Sketch</p>
+              <div class="image-row6">
+                <figure class="card">
+                  <img src="football_sketch.png" alt="Football Sketch" loading="lazy" />
+                </figure>
+              </div>
+            </figure>
+            <figure>
+              <div class="image-row6">
+                <figure class="card">
+                  <div class="img-box">
+                    <img src="s_edit_outputs/s_edit_football_sketch_t_960.png" alt="Football SDEdit t=960" loading="lazy" />
+                  </div>
+                  <figcaption>t=960</figcaption>
+                </figure>
+                <figure class="card">
+                  <div class="img-box">
+                    <img src="s_edit_outputs/s_edit_football_sketch_t_900.png" alt="Football SDEdit t=900" loading="lazy" />
+                  </div>
+                  <figcaption>t=900</figcaption>
+                </figure>
+                <figure class="card">
+                  <div class="img-box">
+                    <img src="s_edit_outputs/s_edit_football_sketch_t_840.png" alt="Football SDEdit t=840" loading="lazy" />
+                  </div>
+                  <figcaption>t=840</figcaption>
+                </figure>
+                <figure class="card">
+                  <div class="img-box">
+                    <img src="s_edit_outputs/s_edit_football_sketch_t_780.png" alt="Football SDEdit t=780" loading="lazy" />
+                  </div>
+                  <figcaption>t=780</figcaption>
+                </figure>
+                <figure class="card">
+                  <div class="img-box">
+                    <img src="s_edit_outputs/s_edit_football_sketch_t_690.png" alt="Football SDEdit t=690" loading="lazy" />
+                  </div>
+                  <figcaption>t=690</figcaption>
+                </figure>
+                <figure class="card">
+                  <div class="img-box">
+                    <img src="s_edit_outputs/s_edit_football_sketch_t_390.png" alt="Football SDEdit t=390" loading="lazy" />
+                  </div>
+                  <figcaption>t=390</figcaption>
+                </figure>
+              </div>
+            </figure>
+
+            <h5>Golden Gate Bridge Sketch</h5>
+            <figure>
+              <p>Hand-Drawn: Original Golden Gate Bridge Sketch</p>
+              <div class="image-row6">
+                <figure class="card">
+                  <img src="golde_gate_sketch.png" alt="Golden Gate Bridge Sketch" loading="lazy" />
+                </figure>
+              </div>
+            </figure>
+            <figure>
+              <div class="image-row6">
+                <figure class="card">
+                  <div class="img-box">
+                    <img src="s_edit_outputs/s_edit_golden_gate_sketch_t_960.png" alt="Golden Gate SDEdit t=960" loading="lazy" />
+                  </div>
+                  <figcaption>t=960</figcaption>
+                </figure>
+                <figure class="card">
+                  <div class="img-box">
+                    <img src="s_edit_outputs/s_edit_golden_gate_sketch_t_900.png" alt="Golden Gate SDEdit t=900" loading="lazy" />
+                  </div>
+                  <figcaption>t=900</figcaption>
+                </figure>
+                <figure class="card">
+                  <div class="img-box">
+                    <img src="s_edit_outputs/s_edit_golden_gate_sketch_t_840.png" alt="Golden Gate SDEdit t=840" loading="lazy" />
+                  </div>
+                  <figcaption>t=840</figcaption>
+                </figure>
+                <figure class="card">
+                  <div class="img-box">
+                    <img src="s_edit_outputs/s_edit_golden_gate_sketch_t_780.png" alt="Golden Gate SDEdit t=780" loading="lazy" />
+                  </div>
+                  <figcaption>t=780</figcaption>
+                </figure>
+                <figure class="card">
+                  <div class="img-box">
+                    <img src="s_edit_outputs/s_edit_golden_gate_sketch_t_690.png" alt="Golden Gate SDEdit t=690" loading="lazy" />
+                  </div>
+                  <figcaption>t=690</figcaption>
+                </figure>
+                <figure class="card">
+                  <div class="img-box">
+                    <img src="s_edit_outputs/s_edit_golden_gate_sketch_t_390.png" alt="Golden Gate SDEdit t=390" loading="lazy" />
+                  </div>
+                  <figcaption>t=390</figcaption>
+                </figure>
+              </div>
+            </figure>
+
+            <h4>Part 1.7.2: Inpainting</h4>
+            <p>Inpainting allows us to edit specific regions of an image while preserving the rest. Below is the result of inpainting the top portion of the Campanile image using the prompt "a high quality picture".</p>
+            
+            I tried many many times to get a good result for the inpainting of the images, especially 
+            for the campanile, but I was not able to get a good result.             
+            <figure>
+              <div class="image-row3">
+                <figure class="card">
+                  <div class="img-box">
+                    <img src="campanile.jpg" alt="Original Campanile" loading="lazy" />
+                  </div>
+                  <figcaption>Original Campanile</figcaption>
+                </figure>
+                <figure class="card">
+                  <div class="img-box">
+                    <img src="campanile_mask.jpg" alt="Original Campanile" loading="lazy" />
+                  </div>
+                  <figcaption>Campanile Mask</figcaption>
+                </figure>
+                <figure class="card">
+                  <div class="img-box">
+                    <img src="inpainting_outputs/campanile_top_inpainted.png" alt="Inpainted Campanile top" loading="lazy" />
+                  </div>
+                  <figcaption>Inpainted Campanile (top region)</figcaption>
+                </figure>
+              </div>
+            </figure>
+            <figure>
+              <div class="image-row3">
+                <figure class="card">
+                  <div class="img-box">
+                    <img src="lens.jpg" alt="Original Campanile" loading="lazy" />
+                  </div>
+                  <figcaption>Original Lens</figcaption>
+                </figure>
+                <figure class="card">
+                  <div class="img-box">
+                    <img src="lens_mask.jpg" alt="Original Campanile" loading="lazy" />
+                  </div>
+                  <figcaption>Lens Mask</figcaption>
+                </figure>
+                <figure class="card">
+                  <div class="img-box">
+                    <img src="inpainting_outputs/lens_inpainted.png" alt="Inpainted Campanile top" loading="lazy" />
+                  </div>
+                  <figcaption>Inpainted Lens</figcaption>
+                </figure>
+              </div>
+            </figure>
+            <figure>
+              <div class="image-row3">
+                <figure class="card">
+                  <div class="img-box">
+                    <img src="skyline.jpg".jpg" alt="Original Campanile" loading="lazy" />
+                  </div>
+                  <figcaption>Original Skyline</figcaption>
+                </figure>
+                <figure class="card">
+                  <div class="img-box">
+                    <img src="lens_mask.jpg" alt="Original Campanile" loading="lazy" />
+                  </div>
+                  <figcaption>Skyline Mask</figcaption>
+                </figure>
+                <figure class="card">
+                  <div class="img-box">
+                    <img src="inpainting_outputs/skyline_inpainted.png" alt="Inpainted Campanile top" loading="lazy" />
+                  </div>
+                  <figcaption>Inpainted Skyline</figcaption>
+                </figure>
+              </div>
+            </figure>
+
+            <h4>Part 1.7.3: Text-Conditional Image-to-image Translation</h4>
+            <p>By using specific text prompts during the denoising process, we can guide the transformation of the Campanile image in creative ways. Below are results using different prompts at various noise levels.</p>
+            <figure>
+                <img src="creative_edits/row_a_plane_taking_off_for_Christm.png" alt="Campanile edited with plane prompt" loading="lazy" style="width: 100%; height: auto; object-fit: contain;" />
+                <figcaption>Campanile edited with prompt: "a plane taking off for Christmas holidays"</figcaption>
+            </figure>
+
+            <figure>
+              <img src="creative_edits/row_a_snowy_Golden_Gate_Bridge_in_.png" alt="Campanile edited with Golden Gate prompt" loading="lazy" style="width: 100%; height: auto; object-fit: contain;" />
+              <figcaption>Campanile edited with prompt: "a snowy Golden Gate Bridge in San Francisco"</figcaption>
+            </figure>
+            <figure>
+              <img src="creative_edits/row_UC_Berkeley's_campanile_tower_.png" alt="Campanile edited with campanile prompt" loading="lazy" style="width: 100%; height: auto; object-fit: contain;" />
+              <figcaption>Campanile edited with prompt: "UC Berkeley's campanile tower next to the smaller Hoover tower"</figcaption>
+            </figure>
+
+
+            <h3>Part 1.8: Visual Anagrams</h3>
+
+            <p>Visual anagrams create images that can be interpreted differently when viewed in different orientations. By combining two prompts and flipping the image during the denoising process, we create hybrid images that reveal different content when rotated 180 degrees.</p>
+            
+            <h4>Bear / Duck Visual Anagram</h4>
+            <p>This visual anagram appears as an oil painting of a bear when viewed upright, but reveals an oil painting of a duck when rotated 180 degrees.</p>
+            <figure>
+              <div class="image-row2">
+                <figure class="card">
+                  <div class="img-box">
+                    <img src="visual_anagrams/anagram_bear_duck_upright.png" alt="Bear/Duck anagram upright" loading="lazy" />
+                  </div>
+                  <figcaption>Upright: Bear</figcaption>
+                </figure>
+                <figure class="card">
+                  <div class="img-box">
+                    <img src="visual_anagrams/anagram_bear_duck_flipped.png" alt="Bear/Duck anagram flipped" loading="lazy" />
+                  </div>
+                  <figcaption>Rotated 180°: Duck</figcaption>
+                </figure>
+              </div>
+            </figure>
+
+            <h4>Car / Bathing Tub Visual Anagram</h4>
+            <p>This visual anagram shows a pencil sketch of a car when upright, but transforms into a pencil sketch of a bathing tub when rotated 180 degrees.</p>
+            <figure>
+              <div class="image-row2">
+                <figure class="card">
+                  <div class="img-box">
+                    <img src="visual_anagrams/anagram_car_tub_upright.png" alt="Car/Tub anagram upright" loading="lazy" />
+                  </div>
+                  <figcaption>Upright: Car</figcaption>
+                </figure>
+                <figure class="card">
+                  <div class="img-box">
+                    <img src="visual_anagrams/anagram_car_tub_flipped.png" alt="Car/Tub anagram flipped" loading="lazy" />
+                  </div>
+                  <figcaption>Rotated 180°: Bathing Tub</figcaption>
+                </figure>
+              </div>
+            </figure>
+
+            <h3>Part 1.9: Hybrid Images</h3>
+
+            <p>Hybrid images are images that contain two different interpretations
+              One interpretation is contained in the low frequencies of the image,
+              the other interpretation is contained in the high frequencies of the image.
+              By controlling the frequency cutoff, we can control the blending between the two interpretations.
+              .</p>
+            <h4>Hybrid Car (Pencil Sketch) / Bathing Tub</h4>
+            <p>For a cutoff of 16 this image contains an old car as well a bathing tub, depending on how far away from the image you are.</p>
+            <figure>
+              <div class="image-row4">
+                <figure class="card">
+                  <div class="img-box">
+                    <img src="hybrid_images/hybrid_car/hybrid_car_cutoff_2.png" alt="Hybrid car cutoff 2" loading="lazy" />
+                  </div>
+                  <figcaption>Cutoff 2</figcaption>
+                </figure>
+                <figure class="card">
+                  <div class="img-box">
+                    <img src="hybrid_images/hybrid_car/hybrid_car_cutoff_4.png" alt="Hybrid car cutoff 4" loading="lazy" />
+                  </div>
+                  <figcaption>Cutoff 4</figcaption>
+                </figure>
+                <figure class="card">
+                  <div class="img-box">
+                    <img src="hybrid_images/hybrid_car/hybrid_car_cutoff_8.png" alt="Hybrid car cutoff 8" loading="lazy" />
+                  </div>
+                  <figcaption>Cutoff 8</figcaption>
+                </figure>
+                <figure class="card">
+                  <div class="img-box">
+                    <img src="hybrid_images/hybrid_car/hybrid_car_cutoff_16.png" alt="Hybrid car cutoff 16" loading="lazy" />
+                  </div>
+                  <figcaption>Cutoff 16</figcaption>
+                </figure>
+              </div>
+            </figure>
+
+            <h4>Hybrid Wine Glass / Candle</h4>
+            <p>For a cutoff of 4, 8, and 16 this image contains a wine glass as well a candle, depending on how far away from the image you are. I really like the results for 
+              the cutoff of 8 and 16. The cutoff of 2 is not very good, as it only shows the wine glass.
+            </p>
+            <figure>
+              <div class="image-row4">
+                <figure class="card">
+                  <div class="img-box">
+                    <img src="hybrid_images/hybrid_wine_candle/hybrid_wine_candle_cutoff_2.png" alt="Hybrid wine candle cutoff 2" loading="lazy" />
+                  </div>
+                  <figcaption>Cutoff 2</figcaption>
+                </figure>
+                <figure class="card">
+                  <div class="img-box">
+                    <img src="hybrid_images/hybrid_wine_candle/hybrid_wine_candle_cutoff_4.png" alt="Hybrid wine candle cutoff 4" loading="lazy" />
+                  </div>
+                  <figcaption>Cutoff 4</figcaption>
+                </figure>
+                <figure class="card">
+                  <div class="img-box">
+                    <img src="hybrid_images/hybrid_wine_candle/hybrid_wine_candle_cutoff_8.png" alt="Hybrid wine candle cutoff 8" loading="lazy" />
+                  </div>
+                  <figcaption>Cutoff 8</figcaption>
+                </figure>
+                <figure class="card">
+                  <div class="img-box">
+                    <img src="hybrid_images/hybrid_wine_candle/hybrid_wine_candle_cutoff_16.png" alt="Hybrid wine candle cutoff 16" loading="lazy" />
+                  </div>
+                  <figcaption>Cutoff 16</figcaption>
+                </figure>
+              </div>
+            </figure>
+          </div>
+        </section>
+
+        <!-- Part B: Training a Flow Matching Model -->
+        <section id="part-2" class="card">
+          <div class="overline">Part B</div>
+          <h2>Training a Flow Matching Model</h2>
+        <!-- INSERT_YOUR_CODE -->
+          <h3>1.2 Visualizing the Noising Process (UNet Denoiser Training)</h3>
+          <p>
+            To train the denoiser network noisy images are created by adding Gaussian noise to clean MNIST digits using various noise levels (
+            <code>&sigma;</code>). <br>
+            Below the output of the noising process for a single MNIST digit with increasing values of
+             <code>&sigma; \in [0.0, 0.2, 0.4, 0.5, 0.6, 0.8, 1.0]</code> is visualized.
+              As <code>&sigma;</code> increases, the digit becomes more and more corrupted by noise,
+               making the restoration problem harder.
+          </p>
+          <figure>
+            <figcaption>
+              Visualization of the noising process on a clean MNIST digit, for different &sigma; values:
+            </figcaption>
+            <div class="image-row7">
+              <figure class="card">
+                <div class="img-box">
+                  <img src="noisy_images/sigma_0.0.png" alt="Noised (sigma=0.0)" loading="lazy" />
+                </div>
+                <figcaption>&sigma; = 0.0</figcaption>
+              </figure>
+              <figure class="card">
+                <div class="img-box">
+                  <img src="noisy_images/sigma_0.2.png" alt="Noised (sigma=0.2)" loading="lazy" />
+                </div>
+                <figcaption>&sigma; = 0.2</figcaption>
+              </figure>
+              <figure class="card">
+                <div class="img-box">
+                  <img src="noisy_images/sigma_0.4.png" alt="Noised (sigma=0.4)" loading="lazy" />
+                </div>
+                <figcaption>&sigma; = 0.4</figcaption>
+              </figure>
+              <figure class="card">
+                <div class="img-box">
+                  <img src="noisy_images/sigma_0.5.png" alt="Noised (sigma=0.5)" loading="lazy" />
+                </div>
+                <figcaption>&sigma; = 0.5</figcaption>
+              </figure>
+              <figure class="card">
+                <div class="img-box">
+                  <img src="noisy_images/sigma_0.6.png" alt="Noised (sigma=0.6)" loading="lazy" />
+                </div>
+                <figcaption>&sigma; = 0.6</figcaption>
+              </figure>
+              <figure class="card">
+                <div class="img-box">
+                  <img src="noisy_images/sigma_0.8.png" alt="Noised (sigma=0.8)" loading="lazy" />
+                </div>
+                <figcaption>&sigma; = 0.8</figcaption>
+              </figure>
+              <figure class="card">
+                <div class="img-box">
+                  <img src="noisy_images/sigma_1.0.png" alt="Noised (sigma=1.0)" loading="lazy" />
+                </div>
+                <figcaption>&sigma; = 1.0</figcaption>
+              </figure>
+            </div>
+          </figure>
+
+          <h3>1.2.1 Training</h3>
+          <p>
+            The objective is to train a denoiser to denoise noisy image 
+            <code>x<sub>noisy</sub> = x + &sigma;&epsilon;</code> with noise <code>&sigma;&epsilon;</code> applied to a clean image <code>x</code>.
+          </p>
+          <p>
+            <strong>Dataset and dataloader:</strong> The MNIST dataset via <code>torchvision.datasets.MNIST</code> is used. 
+            
+            Only the training set is used, the dataset is shuffled before creating the dataloader, and a batch 
+            size of 256. The dataset is trained over for 5 epochs. The image batches are noised when fetched from the 
+            dataloader so that in every epoch the network sees new noised images due to random <code>&sigma;</code>, improving
+             generalization.
+          </p>
+          <p>
+            <strong>Model:</strong> The UNet architecture defined in section 1.1 with hidden dimension D = 128 is used.
+          </p>
+          <p>
+            <strong>Optimizer:</strong> The Adam optimizer with a learning rate of 1e-4 is used.
+          </p>
+          <p>
+            Below, the training loss curve and sample denoised results on the test set after the 1st and 5th epochs are visualized.
+          </p>
+          
+          <figure>
+            <figcaption>
+              Training loss curve over 5 epochs:
+            </figcaption>
+            <img src="denoising_results_unet/training_loss_curve.png" alt="Training loss curve" loading="lazy" style="width: 100%; height: auto; object-fit: contain;" />
+          </figure>
+
+          <figure>
+            <figcaption>
+              Sample denoising results on the test set with noise level &sigma; = 0.5:
+            </figcaption>
+             <figure>
+               <img src="denoising_results_unet/denoising_results_epoch_1.png" alt="Denoising results after epoch 1" loading="lazy" style="width: 100%; height: auto; object-fit: contain;" />
+               <figcaption>After the 1st epoch</figcaption>
+              </figure>
+                 
+              <figure>
+                <img src="denoising_results_unet/denoising_results_epoch_5.png" alt="Denoising results after epoch 5" loading="lazy" style="width: 100%; height: auto; object-fit: contain;" />
+                <figcaption>After the 5th epoch</figcaption>
+              </figure>
+          </figure>
+
+          <h3>1.2.2 Out-of-Distribution Testing</h3>
+          <p>
+            Visualize the denoiser results on test set digits with varying levels of noise 
+            <code>&sigma;</code>.
+          </p>
+          
+          <figure>
+            <figcaption>
+              Sample results on the test set with out-of-distribution noise levels after the model is trained. Keep the same image and vary sigma:
+            </figcaption>
+            <img src="noisy_images/ood_testing_results.png" alt="Out-of-distribution testing results" loading="lazy" style="width: 100%; height: auto; object-fit: contain;" />
+          </figure>
+
+          <h3>1.2.3 Denoising Pure Noise</h3>
+          <p>
+            To make denoising a generative task, the denoiser is trained to denoise pure random Gaussian noise 
+            <code>x<sub>noisy</sub> = &epsilon;</code> where <code>&epsilon; ~ N(0, I)</code>, effectively starting from a blank canvas 
+            and denoising it to generate a clean image. The same training process as in section 1.2.1 is repeated, but with pure noise as input, 
+            training for 5 epochs.
+          </p>
+          
+          <figure>
+            <figcaption>
+              Training loss curve for denoising pure noise over 5 epochs:
+            </figcaption>
+            <img src="pure_denoising_results/training_loss_curve_pure_noise.png" alt="Training loss curve for pure noise denoising" loading="lazy" style="width: 100%; height: auto; object-fit: contain;" />
+          </figure>
+
+          <figure>
+            <figcaption>
+              Sample denoising results on pure noise after the 1st and 5th epochs:
+            </figcaption>
+            <figure>
+              <img src="pure_denoising_results/pure_noise_denoised_epoch_1.png" alt="Pure noise denoised after epoch 1" loading="lazy" style="width: 100%; height: auto; object-fit: contain;" />
+              <figcaption>After the 1st epoch</figcaption>
+            </figure>
+            <figure>
+              <img src="pure_denoising_results/pure_noise_denoised_epoch_5.png" alt="Pure noise denoised after epoch 5" loading="lazy" style="width: 100%; height: auto; object-fit: contain;" />
+              <figcaption>After the 5th epoch</figcaption>
+            </figure>
+          </figure>
+
+          <figure>
+            <figcaption>
+              Generated samples from pure noise after training:
+            </figcaption>
+            <img src="pure_denoising_results/generated_samples_from_pure_noise.png" alt="Generated samples from pure noise" loading="lazy" style="width: 100%; height: auto; object-fit: contain;" />
+          </figure>
+
+          <p>
+            <strong>Patterns observed:</strong> The generated outputs from pure noise tend to converge toward blurry, averaged versions of the training digits. 
+            Rather than generating distinct, sharp digits, the model produces images that resemble a "centroid" or average of all training examples.
+          </p>
+          <p>
+            <strong>Explanation:</strong> With MSE loss, the model learns to predict the point that minimizes the sum of squared distances to all training examples. 
+            This is equivalent to predicting the mean of the training distribution. In the context of MNIST digits, this means the model learns to output a blurred 
+            average that minimizes the expected squared error across all possible digits (0-9). The model cannot generate specific digits because it has no 
+            conditioning signal to distinguish between different classes. It can only predict the optimal "centroid" that minimizes loss across all training images.
+          </p>
+
+          <h3>2.2 Training the UNet</h3>
+          <p>
+            Training our time-conditioned UNet is now pretty easy. Basically, we pick a random image from the training set, 
+            a random timestep <code>t</code>, add noise to <code>x_0</code> to get <code>x_t</code>, and train the denoiser to predict 
+            the flow at <code>t</code>. We repeat this for different images and different timesteps until the model converges and we are happy.
+          </p>
+          <p>
+            <strong>Dataset and dataloader:</strong> The MNIST dataset via <code>torchvision.datasets.MNIST</code> is used. 
+            Training is performed only on the training set. The dataset is shuffled before creating the dataloader. 
+            A batch size of 64 is used. As shown in Algorithm B.1, image batches are noised when fetched from the dataloader.
+          </p>
+          <p>
+            <strong>Model:</strong> The time-conditioned UNet architecture defined in section 2.1 is used with recommended hidden dimension D = 64. 
+            The conditioning signal <code>t</code> is injected into the UNet following the diagram and pseudocode. 
+            The timestep <code>t</code> is normalized before embedding it.
+          </p>
+          <p>
+            <strong>Optimizer:</strong> The Adam optimizer with an initial learning rate of 1e-2 is used. 
+            An exponential learning rate decay scheduler with a gamma of 0.999 is implemented using 
+            <code>torch.optim.lr_scheduler.ExponentialLR(...)</code>. The scheduler is stepped after every epoch.
+          </p>
+          <p>
+            Below, the training loss curve for the time-conditioned UNet over the whole training process is shown.
+          </p>
+          
+          <figure>
+            <figcaption>
+              Training loss curve for the time-conditioned UNet over the whole training process:
+            </figcaption>
+            <img src="time_conditioning/loss_curve.png" alt="Training loss curve for time-conditioned UNet" loading="lazy" style="width: 100%; height: auto; object-fit: contain;" />
+          </figure>
+
+          <h3>2.3 Sampling from the UNet</h3>
+          <p>
+            We can now use our trained time-conditioned UNet for iterative denoising using Algorithm B.2. Starting from random noise, 
+            we iteratively apply the denoising process to generate clean images. The results improve as the model trains for more epochs, 
+            with legible digits emerging even after just a few epochs of training.
+          </p>
+          <p>
+            Below are the sampling results from the time-conditioned UNet after training for 1, 5, and 10 epochs. 
+            While the results are not perfect, reasonably good and legible digits can be observed. The quality improves 
+            noticeably as training progresses, with clearer digit shapes and fewer artifacts at later epochs.
+          </p>
+          
+          <figure>
+            <figcaption>
+              Sampling results from the time-conditioned UNet after 1 epoch:
+            </figcaption>
+            <img src="time_cond_samples/samples_epoch_1.png" alt="Sampling results epoch 1" loading="lazy" style="width: 100%; height: auto; object-fit: contain;" />
+          </figure>
+
+          <figure>
+            <figcaption>
+              Sampling results from the time-conditioned UNet after 5 epochs:
+            </figcaption>
+            <img src="time_cond_samples/samples_epoch_5.png" alt="Sampling results epoch 5" loading="lazy" style="width: 100%; height: auto; object-fit: contain;" />
+          </figure>
+
+          <figure>
+            <figcaption>
+              Sampling results from the time-conditioned UNet after 10 epochs:
+            </figcaption>
+            <img src="time_cond_samples/samples_epoch_10.png" alt="Sampling results epoch 10" loading="lazy" style="width: 100%; height: auto; object-fit: contain;" />
+          </figure>
+
+          <h3>2.4 & 2.5 Training the UNet</h3>
+          
+          <h4>Adding Class-Conditioning to UNet</h4>
+          <p>
+            To make the results better and give more control for image generation, the UNet can also be optionally conditioned on the class of the digit 0-9. 
+          </p>
+          <p>
+            Below, the training loss curve for the class-conditioned UNet over the whole training process is shown.
+          </p>
+          
+          <figure>
+            <figcaption>
+              Training loss curve for the class-conditioned UNet over the whole training process:
+            </figcaption>
+            <img src="class_conditioned_samples_w_scheduler/training_loss_curve_class_conditional_with_scheduler.png" alt="Training loss curve for class-conditioned UNet" loading="lazy" style="width: 100%; height: auto; object-fit: contain;" />
+          </figure>
+
+          <h3>2.6 Sampling from the UNet</h3>
+          <p>
+            Now sampling with class-conditioning and classifier-free guidance with <code>&gamma; = 5.0</code> is performed.
+            Class-conditioning allows to control which digit class to generate, while classifier-free guidance improves 
+            the quality and class fidelity of the generated samples by combining conditional and unconditional predictions.
+          </p>
+          
+          <figure>
+            <figcaption>
+              Sampling results from the class-conditioned UNet after 1 epoch (with scheduler, <code>&gamma; = 5.0</code>):
+            </figcaption>
+            <img src="class_conditioned_samples_w_scheduler/samples_epoch_1_gamma_5.0_w_scheduler.png" alt="Class-conditioned sampling results epoch 1" loading="lazy" style="width: 100%; height: auto; object-fit: contain;" />
+          </figure>
+
+          <figure>
+            <figcaption>
+              Sampling results from the class-conditioned UNet after 5 epochs (with scheduler, <code>&gamma; = 5.0</code>):
+            </figcaption>
+            <img src="class_conditioned_samples_w_scheduler/samples_epoch_5_gamma_5.0_w_scheduler.png" alt="Class-conditioned sampling results epoch 5" loading="lazy" style="width: 100%; height: auto; object-fit: contain;" />
+          </figure>
+
+          <figure>
+            <figcaption>
+              Sampling results from the class-conditioned UNet after 10 epochs (with scheduler, <code>&gamma; = 5.0</code>):
+            </figcaption>
+            <img src="class_conditioned_samples_w_scheduler/samples_epoch_10_gamma_5.0_w_scheduler.png" alt="Class-conditioned sampling results epoch 10" loading="lazy" style="width: 100%; height: auto; object-fit: contain;" />
+          </figure>
+
+          <h4>Removing the Learning Rate Scheduler</h4>
+          <p>
+            The exponential learning rate scheduler adds complexity to the training process. To simplify the training setup while 
+            maintaining performance, we removed the scheduler and compensated by adjusting the initial learning rate and training dynamics.
+          </p>
+          <p>
+            <strong>What I did to compensate:</strong> Instead of using an exponential decay scheduler (gamma = 0.999), a 
+            constant learning rate was maintained throughout training. To ensure similar performance, the initial learning rate was set to 1e-2 
+            to match the effective learning rate that the scheduler would have provided during the later stages of training. 
+          </p>
+
+          <figure>
+            <figcaption>
+              Training loss comparison: with scheduler vs. without scheduler:
+            </figcaption>
+            <img src="class_conditioned_samples_w_scheduler/training_loss_comparison_scheduler_vs_no_scheduler.png" alt="Training loss comparison scheduler vs no scheduler" loading="lazy" style="width: 100%; height: auto; object-fit: contain;" />
+          </figure>
+
+          <figure>
+            <figcaption>
+              Training loss curve for the class-conditioned UNet without scheduler:
+            </figcaption>
+            <img src="class_conditioned_samples/training_loss_curve_class_conditional_no_scheduler.png" alt="Training loss curve for class-conditioned UNet without scheduler" loading="lazy" style="width: 100%; height: auto; object-fit: contain;" />
+          </figure>
+
+          <figure>
+            <figcaption>
+              Sampling results from the class-conditioned UNet after 1 epoch (without scheduler, <code>&gamma; = 5.0</code>):
+            </figcaption>
+            <img src="class_conditioned_samples/samples_epoch_1_gamma_5.0.png" alt="Class-conditioned sampling results epoch 1 no scheduler" loading="lazy" style="width: 100%; height: auto; object-fit: contain;" />
+          </figure>
+
+          <figure>
+            <figcaption>
+              Sampling results from the class-conditioned UNet after 5 epochs (without scheduler, <code>&gamma; = 5.0</code>):
+            </figcaption>
+            <img src="class_conditioned_samples/samples_epoch_5_gamma_5.0.png" alt="Class-conditioned sampling results epoch 5 no scheduler" loading="lazy" style="width: 100%; height: auto; object-fit: contain;" />
+          </figure>
+
+          <figure>
+            <figcaption>
+              Sampling results from the class-conditioned UNet after 10 epochs (without scheduler, <code>&gamma; = 5.0</code>):
+            </figcaption>
+            <img src="class_conditioned_samples/samples_epoch_10_gamma_5.0.png" alt="Class-conditioned sampling results epoch 10 no scheduler" loading="lazy" style="width: 100%; height: auto; object-fit: contain;" />
+          </figure>
+
+          
+
+
+
+        </section>  
+      </main>    
+    <footer>
+      © <span id="year"></span> — Konstantin Wehmeyer
+    </footer>
+  </div>
+
+  <script>
+    // Active link highlighting based on scroll position
+    const sections = [
+      { id: 'part-0', link: 'lnk-part-0' },
+      { id: 'part-1', link: 'lnk-part-1' },
+      { id: 'part-2', link: 'lnk-part-2' }
+    ];
+
+    const linkMap = new Map(sections.map(s => [s.id, document.getElementById(s.link)]));
+
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        const l = linkMap.get(entry.target.id);
+        if (!l) return;
+        if (entry.isIntersecting) {
+          // remove active
+          linkMap.forEach(a => a.classList.remove('active'));
+          l.classList.add('active');
+        }
+      })
+    }, { rootMargin: '-40% 0px -55% 0px', threshold: 0.02 });
+
+    sections.forEach(s => {
+      const el = document.getElementById(s.id);
+      if (el) io.observe(el);
+    });
+
+    // Year in footer
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
